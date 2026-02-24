@@ -1,0 +1,1200 @@
+Install on EAGLEMGR / eagle:
+
+Step 1 – execute “LAB_TRANSFER_INFO.txt”
+Step 2 – execute “LAB_STATS_UTIL.sql”
+Step 3 – execute “LAB_STATS_UTIL_BODY.sql”
+
+The first run will create and populate the table:
+
+execute LAB_STATS_UTIL.LOAD_ALL_TABLES('T');
+
+Run again and this will add “delta” information to the tables:
+
+execute LAB_STATS_UTIL.LOAD_ALL_TABLES('T');
+
+This block will “clean-up” – remove all tables and reset information:
+
+for rec in (
+select owner,table_name from dba_tables where owner = 'EAGLEMGR' 
+and table_name in (select stage_table from eaglemgr.lab_transfer_info union all select destination_table from eaglemgr.lab_transfer_info)
+)
+loop
+execute immediate 'drop table eaglemgr.'||rec.table_name;
+end loop;
+update eaglemgr.lab_transfer_info Set stage_start_time = null;
+update eaglemgr.lab_transfer_info Set stage_end_time = null;
+update eaglemgr.lab_transfer_info Set destination_start_time = null;
+update eaglemgr.lab_transfer_info Set destination_end_time = null;
+update eaglemgr.lab_transfer_info Set destination_count = null;
+update eaglemgr.lab_transfer_info Set stage_count = null;
+delete from eaglemgr.LAB_STATS_LOG;
+commit;
+end;
+/
+
+******** Incase of separate AWR data being loaded *************
+
+insert into eaglemgr.lab_vinstance values(sysdate,1509880367,'DUMMY','12.1.0.2.0',sysdate)
+
+insert into EAGLEMGR.LAB_DATABASE values(sysdate,2,1509880367,'DUMMY',sysdate,'Linux x86 64-bit','NO')
+
+***************************************************************
+
+truncate table lab_transfer_info;
+truncate table lab_stats_log;
+
+This block will show information about how the process ran:
+
+select stage_sequence, destination_table, to_char(stage_start_time, 'MM/DD/YYYY HH24:MI:SS') start_time,
+round((stage_end_time - stage_start_time)*60*24*60) dur1, stage_count,
+to_char(destination_start_time, 'MM/DD/YYYY HH24:MI:SS') deststart_time,
+round((destination_end_time - destination_start_time)*60*24*60) dur2, destination_count,
+destination_error, SOURCE_FROM, destination_table
+from lab_transfer_info where source_type = 'T'
+order by stage_sequence, stage_table
+
+select table_name from all_tables where table_name like 'LAB_%' and table_name not like 'LAB_%T' and table_name not in ('LAB_STATS_LOG','LAB_TRANSFER_INFO');
+
+select count(*) from LAB_HIST_ACTIVE_SESS_HISTORY;
+select count(*) from LAB_PUBLIC_DEPENDENCY;
+select count(*) from LAB_SQL_OPTIMIZER_ENV;
+select count(*) from LAB_TAB_MODIFICATION;
+select count(*) from LAB_DATABASE;
+select count(*) from LAB_HIST_SQL_PLAN;
+select count(*) from LAB_HIST_SYS_TIME_MODEL;
+select count(*) from LAB_INDEXES;
+select count(*) from LAB_INDEX_ROWS;
+select count(*) from LAB_IND_COLUMNS;
+select count(*) from LAB_OBJECTS;
+select count(*) from LAB_PROC_REF;
+select count(*) from LAB_SQL_REF;
+select count(*) from LAB_TABLES;
+select count(*) from LAB_TABLE_ROWS;
+select count(*) from LAB_TAB_COLUMNS;
+select count(*) from LAB_VSESSION;
+select count(*) from LAB_VSQL;
+select count(*) from LAB_VSQL_PLAN;
+select count(*) from LAB_VSQL_TEXT;
+select count(*) from LAB_HIST_SQLTEXT;
+select count(*) from LAB_VSQL_LIST;
+
+select count(*) from LAB_VSQL_TEXT_T;
+select count(*) from LAB_VSQL_T;
+select count(*) from LAB_VSQL_PLAN_T;
+select count(*) from LAB_VSQL_LIST_T;
+select count(*) from LAB_VSESSION_T;
+select count(*) from LAB_TAB_MODIFICATION_T;
+select count(*) from LAB_TAB_COLUMNS_T;
+select count(*) from LAB_TABLE_ROWS_T;
+select count(*) from LAB_TABLES_T;
+select count(*) from LAB_SQL_REF_T;
+select count(*) from LAB_SQL_OPTIMIZER_ENV_T;
+select count(*) from LAB_PUBLIC_DEPENDENCY_T;
+select count(*) from LAB_PROC_REF_T;
+select count(*) from LAB_OBJECTS_T;
+select count(*) from LAB_IND_COLUMNS_T;
+select count(*) from LAB_INDEX_ROWS_T;
+select count(*) from LAB_INDEXES_T;
+select count(*) from LAB_HIST_SYS_TIME_MODEL_T;
+select count(*) from LAB_HIST_SYSTEM_EVENT_T;
+select count(*) from LAB_HIST_SQL_PLAN_T;
+select count(*) from LAB_HIST_SQLTEXT_T;
+select count(*) from LAB_HIST_SQLSTAT_T;
+select count(*) from LAB_HIST_SNAPSHOT_T;
+select count(*) from LAB_HIST_ACTIVE_SESS_HISTORY_T;
+select count(*) from LAB_DATABASE_T;
+
+describe LAB_DATABASE;
+describe LAB_TABLE_ROWS;
+describe LAB_INDEX_ROWS;
+describe LAB_OBJECTS;
+describe LAB_TABLES;
+describe LAB_TAB_COLUMNS;
+describe LAB_INDEXES;
+describe LAB_IND_COLUMNS;
+describe LAB_PROC_REF;
+describe LAB_HIST_SNAPSHOT;
+describe LAB_HIST_SYSTEM_EVENT;
+describe LAB_HIST_SYS_TIME_MODEL;
+describe LAB_HIST_SQLTEXT;
+describe LAB_HIST_SQLSTAT;
+describe LAB_HIST_ACTIVE_SESS_HISTORY;
+describe LAB_HIST_SQL_PLAN;
+describe LAB_VSQL_LIST;
+describe LAB_SQL_REF;
+describe LAB_VSQL;
+describe LAB_VSQL_PLAN;
+describe LAB_VSQL_TEXT;
+describe LAB_SQL_OPTIMIZER_ENV;
+describe LAB_TAB_MODIFICATION;
+describe LAB_PUBLIC_DEPENDENCY;
+describe LAB_VSESSION;
+describe LAB_TAB_COLS;
+describe LAB_VPARAMETER;
+describe LAB_VINSTANCE;
+describe LAB_VSQL_BIND_CAPTURE;
+
+*******************
+
+History of oracle parameter change
+
+select instance_number instance, snap_id, time, parameter_name, old_value, new_value from (
+select a.snap_id,to_char(end_interval_time,'DD-MON-YY HH24:MI') TIME, a.instance_number, parameter_name, value new_value, 
+lag(parameter_name,1) over (partition by parameter_name, a.instance_number order by a.snap_id) old_pname,
+lag(value,1) over (partition by parameter_name, a.instance_number order by a.snap_id) old_value ,
+decode(substr(parameter_name,1,2),'__',2,1) calc_flag
+from dba_hist_parameter a, dba_Hist_snapshot b , v$instance v
+where a.snap_id=b.snap_id 
+and a.instance_number=b.instance_number
+--and parameter_name like nvl('&parameter_name',parameter_name)
+--and a.instance_number like nvl('&instance_number',v.instance_number)
+) 
+where 
+new_value != old_value
+--and calc_flag not in (decode('&show_calculated','Y',3,2))
+order by 1,2
+
+***************** Test case *******************
+
+alter session set nls_date_format='MM/DD/YYYY HH24:MI:SS'; 
+
+alter session set nls_date_format='DD-MM-YYYY:HH24:MI:SS'; 
+
+select max(mstamp) into mydate_time from lab_vsql where mstamp < date_time_passed_in 
+
+analyze index *************************************
+
+EXEC DBMS_STATS.GATHER_INDEX_STATS('<SCHEMA>','<INDEX_NAME>');
+
+**************** COMPARISON SCRIPTS from LABSTATS *********************************
+
+LABSTATS =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = sv13lvm1010)(PORT = 1521))
+    (CONNECT_DATA =
+     (SERVER = DEDICATED)
+      (SERVICE_NAME = labstats)
+    )
+  )
+
+Eaglperf /eagle
+
+select * from master_job_desc order by 1 desc
+
+with tsnaps as (
+select * from table(job_compare_core_fn('ditl_pw_2015r2_b17','ditl_pw_2015r2_b51')) -- pw_r39_vs_pt_r20_sql
+),    
+ time_model AS     
+  (SELECT t1.jobid,     
+    t1.snap_id begin_snap_id,     
+    t2.snap_id end_snap_id,     
+    t2.stat_name,     
+    ROUND((t2.value - t1.value) / 1000000) value     
+  FROM lab_hist_sys_time_model t1,     
+    lab_hist_sys_time_model t2     
+  WHERE t1.jobid     = t2.jobid     
+  AND t1.snap_id + 1 = t2.snap_id     
+  AND t1.stat_name   = t2.stat_name     
+  ),
+wait_event AS     
+  (SELECT t1.jobid,     
+    t1.snap_id begin_snap_id,     
+    t2.snap_id end_snap_id,     
+    t2.event_name stat_name,     
+    t2.wait_class,     
+    (t2.total_waits - t1.total_waits) total_waits,     
+    (t2.total_timeouts - t1.total_timeouts) total_timeouts,     
+    ROUND((t2.time_waited_micro - t1.time_waited_micro) / 1000000) value     
+  FROM LAB_HIST_SYSTEM_EVENT t1,     
+    LAB_HIST_SYSTEM_EVENT t2     
+  WHERE t1.jobid     = t2.jobid     
+  AND t1.snap_id + 1 = t2.snap_id     
+  AND t1.wait_class <> 'Idle'     
+  AND t1.wait_class  = t2.wait_class     
+  AND t1.event_name  = t2.event_name     
+  ),     
+  mylist AS     
+  (SELECT t1.*,     
+   'Work/Duration' stat_type,     
+   t2.stat_name,     
+    t2.value,     
+    2 stat_seq     
+  FROM tsnaps t1,     
+    time_model t2     
+  WHERE t1.jobid = t2.jobid     
+  AND t1.begin_snap_id = t2.begin_snap_id     
+  AND t2.value         > 0     
+  UNION ALL     
+  SELECT t1.*,     
+    'Wait - ' || t2.wait_class,     
+    t2.stat_name,     
+    t2.value,     
+    3 stat_seq     
+  FROM tsnaps t1,     
+    wait_event t2     
+  WHERE t1.jobid       = t2.jobid     
+  AND t1.begin_snap_id = t2.begin_snap_id     
+  AND t2.value         > 60
+  UNION ALL     
+  SELECT t1.*,     
+    'Summary',     
+    'AWR Duration',     
+    ROUND((TO_DATE(TO_CHAR(t2.end_interval_time, 'MM/DD/YYYY HH24:MI:SS'), 'MM/DD/YYYY HH24:MI:SS') - TO_DATE(TO_CHAR(     
+    t2.begin_interval_time, 'MM/DD/YYYY HH24:MI:SS'), 'MM/DD/YYYY HH24:MI:SS')) * 24 * 60 * 60) d,     
+    1 stat_seq     
+  FROM tsnaps t1,     
+    lab_hist_snapshot t2     
+  WHERE t1.jobid     = t2.jobid     
+  AND t1.end_snap_id = t2.snap_id)
+SELECT decode(t0.stat_name, 'sql execute elapsed time', 'SQL time', t0.stat_name) stat_name,     
+  t0.job_name,     
+  ROUND(t1.value / 60, 0) base_mins,     
+  ROUND(t2.value / 60, 0) new_mins,     
+  ROUND((NVL(t1.value, 0) - NVL(t2.value, 0)) / 60, 1) improve_mins,     
+  ROUND(100 *(NVL(t1.value, 0) - NVL(t2.value, 0)) / DECODE(NVL(t1.value, 0), 0, 1, NVL(t1.value, 0)), 0) improve_percent,
+  round(100 *(NVL(t1.value, 0) +  NVL(t2.value, 0)) /t00.sum_type, 1) work_percent,
+  t1.run_name run_name_old,
+  t2.run_name run_name_new
+FROM     
+  (SELECT stat_type,     
+    sum(value) sum_type  
+  FROM mylist    
+  GROUP BY stat_type  
+  ) t00,     
+  (SELECT min(ref_id) ref_id,  
+     job_name,     
+    stat_type,     
+    stat_name,     
+    stat_seq     
+  FROM mylist    
+  GROUP BY job_name, stat_type, stat_name, stat_seq  
+  ) t0,     
+  (SELECT *     
+  FROM mylist     
+  WHERE runid = 1     
+  ) t1,     
+  (SELECT *     
+  FROM mylist     
+  WHERE runid = 2     
+  ) t2     
+WHERE t0.job_name = t1.job_name (+)     
+AND t0.stat_name  = t1.stat_name (+)     
+AND t0.job_name   = t2.job_name (+)     
+AND t0.stat_name  = t2.stat_name (+)   
+AND t0.stat_type = t00.stat_type (+)
+and t0.stat_name in ('AWR Duration', 'DB time', 'sql execute elapsed time') 
+ORDER BY       
+t0.ref_id,  t0.stat_seq, t1.value desc
+
+
+WITH  finallist AS
+  (
+  select * from table(job_compare_core_fn('ditl_pw_2015r2_b17', 'ditl_pw_2015r2_b51'))
+
+  ),
+  mylist AS    
+  (SELECT t1.runid,    
+    t1.jobid,    
+    t1.ref_id,    
+    t1.job_name,    
+    t1.run_name,    
+    t2.sql_id,    
+    sum(t2.elapsed_time_delta) elapsed_time_delta,    
+    sum(t2.cpu_time_delta) cpu_time_delta,    
+    sum(t2.executions_delta) executions_delta,    
+    sum(t2.rows_processed_delta) rows_processed_delta,    
+    sum(t2.buffer_gets_delta) buffer_gets_delta,    
+    sum(t2.disk_reads_delta) disk_reads_delta,    
+    avg(t2.plan_hash_value) plan_hash_value    
+ FROM finallist t1,    
+    lab_hist_sqlstat t2    
+  WHERE t1.jobid     = t2.jobid    
+  AND t1.end_snap_id = t2.snap_id   
+  GROUP BY
+  t1.runid,    
+    t1.jobid,    
+    t1.ref_id,    
+    t1.job_name,    
+    t1.run_name,    
+    t2.sql_id
+  ),    
+myfinal as (SELECT t0.jobid, t0.job_name, 
+  t1.run_name old_run,
+  t2.run_name new_run,
+  ROUND(t0.avg_elapsed          /1000000) avg_elapsed,    
+  ROUND(t1.elapsed_time_delta          /1000000) old_elapsed,    
+  ROUND(t2.elapsed_time_delta          /1000000) new_elapsed,    
+  ROUND((nvl(t1.elapsed_time_delta,0) -    nvl(t2.elapsed_time_delta,0))       /1000000) improve_elapsed,    
+  ROUND(t1.cpu_time_delta              /1000000) old_cpu,    
+  ROUND(t2.cpu_time_delta              /1000000) new_cpu,    
+  t1.executions_delta old_execs,    
+  t2.executions_delta new_execs,    
+  t1.rows_processed_delta old_rows,    
+  t2.rows_processed_delta new_rows,    
+  t1.buffer_gets_delta old_gets,    
+  t2.buffer_gets_delta new_gets,    
+  t1.disk_reads_delta old_disk,    
+  t2.disk_reads_delta new_disk,    
+  t1.plan_hash_value old_plan,    
+  t2.plan_hash_value new_plan,    
+  t0.sql_id , 
+  proc_ref(t0.sql_id) ref, 
+  (SELECT TO_CHAR(substrb(sql_text, 1, 4000))    
+  FROM lab_hist_sqltext t    
+  WHERE t.sql_id = t0.sql_id    
+  ) sql_text1,   
+  (SELECT TO_CHAR(substrb(sql_text, 4001, 4000))    
+  FROM lab_hist_sqltext t    
+  WHERE t.sql_id = t0.sql_id    
+  ) sql_text2    
+FROM    
+  (SELECT min(ref_id) jobid, job_name,    
+    sql_id,    
+    ROUND(SUM(NVL(elapsed_time_delta, 0))/count(*)) avg_elapsed    
+  FROM mylist    
+ GROUP BY job_name, sql_id    
+  ) t0,    
+  (SELECT * FROM mylist WHERE runid = 1    
+  ) t1,    
+  (SELECT * FROM mylist WHERE runid = 2    
+  ) t2    
+WHERE t0.avg_elapsed > 10000000    
+AND t0.job_name      = t1.job_name (+)    
+AND t0.sql_id        = t1.sql_id (+)    
+AND t0.job_name      = t2.job_name (+)    
+AND t0.sql_id        = t2.sql_id (+)    
+ORDER BY 1,    
+  3 DESC) 
+  select t.* from myfinal t
+  
+where old_cpu*1.2 < new_cpu and old_cpu is not null and new_cpu is not null
+and avg_elapsed > 60
+
+order by jobid, avg_elapsed desc
+
+  
+--where nvl(new_elapsed,0) > nvl(old_elapsed,0)*1.2 where nvl(new_gets,0) > nvl(old_gets,0)*1.2 and nvl(old_plan, 0) <> nvl(new_plan, 0) and avg_elapsed > 60
+
+order by jobid, avg_elapsed desc
+
+************** Note section ******************************
+-- No Baseline
+select p.sql_id,  extractvalue(h.column_value,'/info/@type') type, extractvalue(h.column_value,'/info') lvl, 
+from   v$sql_plan p, table(xmlsequence(extract(xmltype(p.other_xml),'/other_xml/info'))) h
+where  p.other_xml is not null 
+and extractvalue(h.column_value,'/info/@type') not in ('db_version','parse_schema','plan_hash','plan_hash_2','nodeid/pflags')
+and p.sql_id = '4cbqcadd0chv4' and child_number = 0
+
+-- dynamic_sampling = <no.>
+-- cardinality_feedback = yes/no
+-- sql_profile = <value>
+
+-- Baseline
+select sql_id, child_number,sql_profile, sql_plan_baseline from v$sql where sql_id = '4cbqcadd0chv4'
+
+************** LABS_UTIL Testing *************************
+
+SNAP SHOT : EXEC dbms_workload_repository.create_snapshot;
+
+Test Case : Load 1 ---------------------------------------------------------------------------------------
+
+begin
+for rec in (
+select table_name from dba_tables where owner = user 
+and table_name in (select stage_table from lab_transfer_info union all select destination_table from lab_transfer_info)
+)
+loop
+execute immediate 'drop table ' || rec.table_name;
+end loop;
+update lab_transfer_info Set stage_start_time = null;
+update lab_transfer_info Set stage_end_time = null;
+update lab_transfer_info Set destination_start_time = null;
+update lab_transfer_info Set destination_end_time = null;
+update lab_transfer_info Set destination_count = null;
+update lab_transfer_info Set stage_count = null;
+delete from LAB_STATS_LOG;
+commit;
+end;
+/
+
+truncate table lab_transfer_info
+
+drop table test_convert;
+
+EXEC dbms_workload_repository.create_snapshot;
+
+
+begin
+LAB_STATS_UTIL.LOAD_ALL_TABLES('T');
+end;
+/
+
+select sql_id, sql_text from v$sql where sql_text like 'S%TEST_CONVERT%' order by last_active_time desc
+
+SELECT labstats.labs_util.sql_id_info_line(LEVEL)
+FROM dual CONNECT BY LEVEL <=
+  (SELECT MAX(labstats.labs_util.sql_id_info('7t45bmaahthzf',to_date('11/30/2016 12:00','MM/DD/YYYY HH24:MI') or SYSDATE or SYSDATE - 1,'DBNAME')) from dual)
+  
+  SELECT eaglemgr.eagle_util.sql_id_info_line(LEVEL)
+FROM dual CONNECT BY LEVEL <=
+  (SELECT MAX(eaglemgr.eagle_util.sql_id_info('7t45bmaahthzf')) from dual)
+  
+Table info ************************
+
+select pace_masterdbo.pkg_eagle_util.do_object_summary(sql_id) info, 
+to_char(max_active, 'MM/DD/YYYY HH24:MI:SS') max_active,
+to_char(min_active, 'MM/DD/YYYY HH24:MI:SS') min_active,
+sql_id, cnt, sql_text,
+(select to_char(dbms_lob.substr(sql_fulltext, 4000, 1)) from v$sql st where st.sql_id = t1.sql_id and rownum < 2) sql_text1,
+(select to_char(dbms_lob.substr(sql_fulltext, 4001, 4000)) from v$sql st where st.sql_id = t1.sql_id and rownum < 2) sql_text2
+from
+(
+select min(sql_id) sql_id, count(*) cnt, max(last_active_time) max_active, min(last_active_time) min_active, sql_text
+from
+(
+SELECT sql_id, last_active_time, 
+pace_masterdbo.pkg_eagle_util.remove_constants(sql_text) sql_text from v$sql where executions = 1
+and last_active_time > sysdate - (10/(24*60))
+)
+group by sql_text
+having count(*) > 5
+) t1
+order by sql_text
+
+*************** IO details *************************
+
+select min(begin_time), max(end_time),
+       sum(case metric_name when 'Physical Read Total Bytes Per Sec' then average end) Physical_Read_Total_Bps,
+       sum(case metric_name when 'Physical Write Total Bytes Per Sec' then average end) Physical_Write_Total_Bps,
+       sum(case metric_name when 'Redo Generated Per Sec' then average end) Redo_Bytes_per_sec,
+       sum(case metric_name when 'Physical Read Total IO Requests Per Sec' then average end) Physical_Read_IOPS,
+       sum(case metric_name when 'Physical Write Total IO Requests Per Sec' then average end) Physical_write_IOPS,
+       sum(case metric_name when 'Redo Writes Per Sec' then average end) Physical_redo_IOPS,
+       sum(case metric_name when 'Current OS Load' then average end) OS_LOad,
+       sum(case metric_name when 'CPU Usage Per Sec' then average end) DB_CPU_Usage_per_sec, 
+       sum(case metric_name when 'Host CPU Utilization (%)' then average end) Host_CPU_util, --NOTE 100% = 1 loaded RAC node
+       sum(case metric_name when 'Network Traffic Volume Per Sec' then average end) Network_bytes_per_sec, 
+       snap_id
+from eaglemgr.LAB_HIST_SYSMETRIC_SUMMARY
+group by snap_id
+order by snap_id;
+
+SELECT pace_masterdbo.pkg_eagle_util.sql_id_info_line(LEVEL)
+FROM dual CONNECT BY LEVEL <=
+  (SELECT MAX(pace_masterdbo.pkg_eagle_util.table_info('ESTAR_INCOME_ACTIVITY')) from dual)
+  
+    SELECT pace_masterdbo.pkg_eagle_util.sql_id_info_line(LEVEL)
+FROM dual CONNECT BY LEVEL <=
+  (SELECT MAX(pace_masterdbo.pkg_eagle_util.sql_id_info('7t45bmaahthzf')) from dual)
+  
+  SELECT pace_masterdbo.pkg_eagle_util.sql_id_info_line(LEVEL)
+FROM dual CONNECT BY LEVEL <=
+  (SELECT MAX(pace_masterdbo.pkg_eagle_util.awr_sql_id_session_history(561)) from dual)
+  
+Session Info **********************
+
+SELECT pace_masterdbo.pkg_eagle_util.sql_id_info_line(LEVEL)
+FROM dual CONNECT BY LEVEL <=
+  (SELECT MAX(pace_masterdbo.pkg_eagle_util.session_info(1)) from dual)
+  
+Testing --------------------- RADD015
+
+SELECT eaglemgr.labs_util.sql_id_info_line(LEVEL)
+FROM dual CONNECT BY LEVEL <=
+  (SELECT MAX(eaglemgr.labs_util.sql_id_info('axs7qyfun30c5',NULL,NULL)) from dual)
+  
+  SELECT labstats.labs_util.sql_id_info_line(LEVEL)
+FROM dual CONNECT BY LEVEL <=
+  (SELECT MAX(labstats.labs_util.sql_id_info('axs7qyfun30c5',NULL,NULL)) from dual)
+  
+    SELECT eaglemgr.eagle_util.sql_id_info_line(LEVEL)
+FROM dual CONNECT BY LEVEL <=
+  (SELECT MAX(eaglemgr.eagle_util.sql_id_info('axs7qyfun30c5')) from dual)
+  
+      SELECT pace_masterdbo.pkg_eagle_util.sql_id_info_line(LEVEL)
+FROM dual CONNECT BY LEVEL <=
+  (SELECT MAX(pace_masterdbo.pkg_eagle_util.sql_id_info('axs7qyfun30c5')) from dual)
+  
+SELECT labstats.labs_util.sql_id_info_line(LEVEL)
+FROM dual CONNECT BY LEVEL <=
+(SELECT MAX(labstats.labs_util.session_info_awr(<DBID>,to_date('<start date>','MM/DD/YYYY'),<start snap_id>,to_date('<end date>','MM/DD/YYYY'),<end snap_id>)) from dual)
+
+SELECT pace_masterdbo.pkg_eagle_util.sql_id_info_line(LEVEL)
+FROM dual CONNECT BY LEVEL <=
+(SELECT MAX(pace_masterdbo.pkg_eagle_util.table_info('<table_name>',<dbid>,to_date(<date>,'MM/DD/YYYY HH24:MI')) from dual)
+ 
+ SELECT pace_masterdbo.pkg_eagle_util.sql_id_info_line(LEVEL)
+FROM dual CONNECT BY LEVEL <=
+(SELECT MAX(pace_masterdbo.pkg_eagle_util.sql_id_info('grnx9xxuy2zw9')) from dual)
+
+Test Case : Load 2 ---------------------------------------------------------------------------------------
+
+begin
+for rec in (
+select table_name from dba_tables where owner = user 
+and table_name in (select stage_table from eaglemgr.lab_transfer_info)
+)
+loop
+execute immediate 'delete from eaglemgr.' || rec.table_name;
+end loop;
+update eaglemgr.lab_transfer_info Set stage_start_time = null;
+update eaglemgr.lab_transfer_info Set stage_end_time = null;
+update eaglemgr.lab_transfer_info Set destination_start_time = null;
+update eaglemgr.lab_transfer_info Set destination_end_time = null;
+update eaglemgr.lab_transfer_info Set destination_count = null;
+update eaglemgr.lab_transfer_info Set stage_count = null;
+delete from eaglemgr.LAB_STATS_LOG;
+commit;
+end;
+/
+
+EXEC dbms_workload_repository.create_snapshot;
+
+create unique index test_convert_pk on test_convert(mypk);
+
+commit;
+
+EXECUTE DBMS_STATS.GATHER_TABLE_STATS('EAGLEMGR','TEST_CONVERT');
+
+begin
+for rec in (select * from test_convert where mypk between 10000 and 10010)
+loop
+null;
+end loop;
+end ;
+/
+
+--select sql_id, sql_text from v$sql where sql_text like 'S%TEST_CONVERT%' order by last_active_time desc
+
+begin
+LAB_STATS_UTIL.LOAD_ALL_TABLES('T');
+end;
+/
+
+SELECT eaglemgr.labs_util.labs_sql_id_info_line(LEVEL)
+FROM dual CONNECT BY LEVEL <=
+  (SELECT MAX(eaglemgr.labs_util.labs_sql_id_info('d9p6nnf4ndnmm',3452521985,'MM/DD/YYYY 24HH/MI')) from dual)
+
+******************* Intergrated scheduler **************************
+
+select sd.spd_instance, sd.schedule_comments, sd.enable, sq.actual_start_time, sq.actual_stop_time
+from Pace_masterdbo.egl_sched_def sd, pace_masterdbo.Egl_Sched_Queue sq
+where sd.spd_instance in (select distinct sd_instance from pace_masterdbo.Egl_Sched_Queue 
+where actual_stop_time between '05/20/2016 10:26:38' and '05/20/2016 13:56:00')
+and sq.actual_stop_time between '05/20/2016 10:26:38' and '05/20/2016 13:55:33'
+and sd.spd_instance = sq.sd_instance
+and enable = 1
+--and sd.schedule_comments in ('EAGLE CC-AEW-ENTITY-STATS-DELTA','EAGLE CC-AEW-ENTITY-STATS-DELTA_PW','EAGLE CC-AEW-GLOBAL-STATS-DELTA','EAGLE CC-AEW-GLOBAL-STATS-DELTA_PW')
+order by sq.actual_stop_time DESC
+
+select * from pace_masterdbo.Egl_Sched_Queue 
+where actual_stop_time between '05/20/2016 10:26:38' and '05/20/2016 13:55:33'
+order by actual_stop_time desc
+
+select instance, schedule_comments from pace_masterdbo.egl_sched_def group by instance, schedule_comments
+where schedule_comments in ('EAGLE CC-AEW-ENTITY-STATS-DELTA','EAGLE CC-AEW-ENTITY-STATS-DELTA_PW','EAGLE CC-AEW-GLOBAL-STATS-DELTA','EAGLE CC-AEW-GLOBAL-STATS-DELTA_PW')
+
+
+select sd.spd_instance, sd.schedule_comments--,sq.* 
+from pace_masterdbo.Egl_Sched_Queue sd, pace_masterdbo.Egl_Sched_Queue sq
+where sq.actual_stop_time between '05/20/2016 10:26:38' and '05/20/2016 13:56:00' 
+and sd.spd_instance = sq.sd_instance
+order by sq.actual_stop_time DESC
+
+select distinct sd_instance from pace_masterdbo.Egl_Sched_Queue 
+where actual_stop_time between '05/20/2016 10:26:38' and '05/20/2016 14:05:00'
+order by actual_stop_time DESC
+
+select * from Pace_masterdbo.egl_sched_def where spd_instance
+in (select distinct sd_instance from pace_masterdbo.Egl_Sched_Queue 
+where actual_stop_time between '05/20/2016 10:26:38' and '05/20/2016 14:05:00')
+and 
+
+    alter session set nls_date_format='MM/DD/YYYY HH24:MI:SS'; 
+
+select 
+INSTANCE,MESSAGE_TYPE, MESSAGE_SUBTYPE,SUBMIT_TIME, PROCESS_TIME
+from estar.estar_loopback_events
+     where process_time  between '05/20/2016 10:26:38' and '05/20/2016 14:05:00'
+ORDER BY PROCESS_TIME DESC
+
+select s.schedule_id, s.name, es.starting_time
+     from msgcenter_dbo.schedule s,msgcenter_dbo.schedule_step ss,
+     msgcenter_dbo.schedule_event_summary es
+     where s.schedule_id = es.schedule_id
+     and s.schedule_id = ss.schedule_id
+     and es.schedule_step_id = ss.schedule_step_id
+     and es.starting_time  between '05/20/2016 10:26:38' and '05/20/2016 14:05:00'
+     --and s.status = 0
+     order by es.starting_time desc
+     --and s.name in ('EAGLE CC-AEW-ENTITY-STATS-DELTA','EAGLE CC-AEW-ENTITY-STATS-DELTA_PW','EAGLE CC-AEW-GLOBAL-STATS-DELTA','EAGLE CC-AEW-GLOBAL-STATS-DELTA_PW')
+     
+     and es.entity_id is not NULL
+     order by es.starting_time desc
+     
+     
+           and es.starting_time > to_date('20160525054405','YYYYMMDDHH24MISS')
+           
+select * from msgcenter_dbo.schedule where spd_instance is not null
+
+select * from msgcenter_dbo.schedule_event_summary
+
+*************************** select queries for PT **************************
+
+--########## multiple query plans
+
+with last_snapshot as (select max(snap_id) snap_id from dba_hist_snapshot),
+sqlstat as
+(select sql_id, 
+  plan_hash_value,
+  max(snap_id) max_snap_id,
+  sum(executions_delta) execs,
+  round(sum(elapsed_time_delta)/ 60000000, 0) elapsed,
+  round(sum(cpu_time_delta)/ 60000000, 0) cpu,
+  sum(buffer_gets_delta) gets,
+  sum(disk_reads_delta) mdisk,
+  sum(rows_processed_delta) mrows,
+  round(sum(rows_processed_delta) / (decode(sum(nvl(elapsed_time_delta, 0)), 0, 1, sum(nvl(elapsed_time_delta, 0))) / 1000000)) rows_sec,
+  round(sum(buffer_gets_delta) / decode(sum(nvl(rows_processed_delta, 0)), 0, 1, sum(nvl(rows_processed_delta, 0)))) gets_row
+  from  dba_hist_sqlstat
+  where sql_id in (select sql_id from dba_hist_sqlstat where snap_id = (select snap_id from last_snapshot) and plan_hash_value > 0)
+  group by sql_id, 
+  plan_hash_value
+)
+select * from sqlstat where sql_id in
+(select t2.sql_id
+from
+(select sql_id, min(rows_sec) rows_sec from sqlstat where max_snap_id = (select snap_id from last_snapshot) group by sql_id) t1,
+sqlstat t2
+where t1.sql_id = t2.sql_id
+and t1.rows_sec < t2.rows_sec *.5)
+order by sql_id
+
+--************************************* labstats comparison SQL *************************************
+
+with tsnaps as (
+  select * from table(job_compare_core_fn('ditl_pw_2015r2_b17', 'ditl_radd015_b03'))
+),    
+ time_model AS     
+  (SELECT t1.jobid,     
+    t1.snap_id begin_snap_id,     
+    t2.snap_id end_snap_id,     
+    t2.stat_name,     
+    ROUND((t2.value - t1.value) / 1000000) value     
+  FROM lab_hist_sys_time_model t1,     
+    lab_hist_sys_time_model t2     
+  WHERE t1.jobid     = t2.jobid     
+  AND t1.snap_id + 1 = t2.snap_id     
+  AND t1.stat_name   = t2.stat_name     
+  ),
+wait_event AS     
+  (SELECT t1.jobid,     
+    t1.snap_id begin_snap_id,     
+    t2.snap_id end_snap_id,     
+    t2.event_name stat_name,     
+    t2.wait_class,     
+    (t2.total_waits - t1.total_waits) total_waits,     
+    (t2.total_timeouts - t1.total_timeouts) total_timeouts,     
+    ROUND((t2.time_waited_micro - t1.time_waited_micro) / 1000000) value     
+  FROM LAB_HIST_SYSTEM_EVENT t1,     
+    LAB_HIST_SYSTEM_EVENT t2     
+  WHERE t1.jobid     = t2.jobid     
+  AND t1.snap_id + 1 = t2.snap_id     
+  AND t1.wait_class <> 'Idle'     
+  AND t1.wait_class  = t2.wait_class     
+  AND t1.event_name  = t2.event_name     
+  ),     
+  mylist AS     
+  (SELECT t1.*,     
+   'Work/Duration' stat_type,     
+   t2.stat_name,     
+    t2.value,     
+    2 stat_seq     
+  FROM tsnaps t1,     
+    time_model t2     
+  WHERE t1.jobid = t2.jobid     
+  AND t1.begin_snap_id = t2.begin_snap_id     
+  AND t2.value         > 0     
+  UNION ALL     
+  SELECT t1.*,     
+    'Wait - ' || t2.wait_class,     
+    t2.stat_name,     
+    t2.value,     
+    3 stat_seq     
+  FROM tsnaps t1,     
+    wait_event t2     
+  WHERE t1.jobid       = t2.jobid     
+  AND t1.begin_snap_id = t2.begin_snap_id     
+  AND t2.value         > 60
+  UNION ALL     
+  SELECT t1.*,     
+    'Summary',     
+    'AWR Duration',     
+    ROUND((TO_DATE(TO_CHAR(t2.end_interval_time, 'MM/DD/YYYY HH24:MI:SS'), 'MM/DD/YYYY HH24:MI:SS') - TO_DATE(TO_CHAR(     
+    t2.begin_interval_time, 'MM/DD/YYYY HH24:MI:SS'), 'MM/DD/YYYY HH24:MI:SS')) * 24 * 60 * 60) d,     
+    1 stat_seq     
+  FROM tsnaps t1,     
+    lab_hist_snapshot t2     
+  WHERE t1.jobid     = t2.jobid     
+  AND t1.end_snap_id = t2.snap_id)
+SELECT
+decode(t0.stat_name, 'sql execute elapsed time', 'SQL time', t0.stat_name) stat_name,     
+  t0.job_name,     
+  ROUND(t1.value / 60, 0) base_mins,     
+  ROUND(t2.value / 60, 0) new_mins,     
+  ROUND((NVL(t1.value, 0) - NVL(t2.value, 0)) / 60, 1) improve_mins,     
+  ROUND(100 *(NVL(t1.value, 0) - NVL(t2.value, 0)) / DECODE(NVL(t1.value, 0), 0, 1, NVL(t1.value, 0)), 0) improve_percent,  
+  round(100 *(NVL(t1.value, 0) +  NVL(t2.value, 0)) /t00.sum_type, 1) work_percent,
+  t1.run_name run_name_old,
+  t2.run_name run_name_new
+FROM     
+  (SELECT stat_type,     
+    sum(value) sum_type  
+  FROM mylist    
+  GROUP BY stat_type  
+  ) t00,     
+  (SELECT min(ref_id) ref_id,  
+     job_name,     
+    stat_type,     
+    stat_name,     
+    stat_seq     
+  FROM mylist    
+  GROUP BY job_name, stat_type, stat_name, stat_seq  
+  ) t0,     
+  (SELECT *     
+  FROM mylist     
+  WHERE runid = 1     
+  ) t1,     
+  (SELECT *     
+  FROM mylist     
+  WHERE runid = 2     
+  ) t2     
+WHERE t0.job_name = t1.job_name (+)     
+AND t0.stat_name  = t1.stat_name (+)     
+AND t0.job_name   = t2.job_name (+)     
+AND t0.stat_name  = t2.stat_name (+)   
+AND t0.stat_type = t00.stat_type (+)  
+and t0.stat_name in ('AWR Duration', 'DB time', 'sql execute elapsed time', 'DB CPU') 
+ORDER BY       
+t0.ref_id,  t0.stat_seq, t1.value desc
+
+--************************************* workload SQL *************************************
+
+with tlist as (SELECT *
+FROM
+  (SELECT t1.snap_id begin_snap_id,
+    t2.snap_id end_snap_id,
+    t2.event_name stat_name,
+    t2.wait_class,
+    (t2.total_waits             - t1.total_waits) total_waits,
+    (t2.total_timeouts          - t1.total_timeouts) total_timeouts,
+    ROUND((t2.time_waited_micro - t1.time_waited_micro) / 1000000) value
+  FROM DBA_HIST_SYSTEM_EVENT t1,
+    DBA_HIST_SYSTEM_EVENT t2
+  WHERE t1.snap_id + 1 = t2.snap_id
+  AND t1.wait_class   <> 'Idle'
+  AND t1.wait_class    = t2.wait_class
+  AND t1.event_name    = t2.event_name
+  union all
+  SELECT t1.snap_id begin_snap_id,
+    t2.snap_id end_snap_id,
+    t2.stat_name,
+    'Model', 0, 0,
+    ((t2.value - t1.value) / 1000000) value
+  FROM DBA_hist_sys_time_model t1,
+    DBA_hist_sys_time_model t2
+  WHERE t1.snap_id + 1 = t2.snap_id
+  AND t1.stat_name   = t2.stat_name
+  union all
+  SELECT t1.snap_id begin_snap_id,
+    t2.snap_id end_snap_id,
+    t2.stat_name,
+    'OS', 0, 0,
+    ((t2.value - t1.value) / 100) value
+  FROM DBA_HIST_OSSTAT t1,
+    DBA_HIST_OSSTAT t2
+  WHERE t1.snap_id + 1 = t2.snap_id
+  AND t1.stat_name   = t2.stat_name
+  ) tm
+WHERE tm.end_snap_id in
+  (SELECT snap_id FROM dba_hist_snapshot where begin_interval_time > trunc(sysdate) - 2)
+  and value > 0
+  )
+select t0.name db_name, t.end_snap_id snap_id,
+to_char(begin_interval_time, 'DAY') dow,
+to_char(ts.begin_interval_time, 'MM/DD/YYYY') beg_dt,
+to_char(ts.begin_interval_time, 'HH24:MI') beg_hr,
+round((t8.value+t9.value)/ts.delta, 0) host_cpus,
+round(ts.delta/60, 1) snap_delta,
+round(t8.value/60, 0) host_cpu,
+round(t9.value/60, 0) host_idle,
+round(t8.value/DELTA, 1) host_cpu_use,
+round(t.value/60, 0) db_time,
+round(t2.value/60, 0) db_cpu,
+round(t2.value/DELTA, 1) db_cpus,
+round(t1.value/60, 0) sql_time,
+round((t.value-t2.value)/60, 0) db_other,
+nvl(round(t3.value/60, 0), 0) user_io,
+nvl(round(t4.value/60, 0), 0) concur,
+nvl(round(t7.value/60, 0), 0) disk_time,
+nvl(round(tlf.value/60, 0), 0) log_file_swtch,
+nvl(round(t6.value/60, 0), 0) log_file_sync,
+nvl(round(t5.value/60, 0), 0) buf_busy,
+round(tr.average, 0) redo,
+round(tpr.average, 0) phy_reads,
+round(tc.average, 0) block_chgs,
+round(tpw.average, 0) phy_write,
+round(tt.average, 0) trans,
+round(tr.average*ts.delta, 0) tot_redo,
+round(tt.average*ts.delta, 0) tot_trans
+from v$database t0,
+tlist t,
+(select n.*,
+EXTRACT (DAY    FROM (end_interval_time-begin_interval_time))*24*60*60+
+           EXTRACT (HOUR   FROM (end_interval_time-begin_interval_time))*60*60+
+           EXTRACT (MINUTE FROM (end_interval_time-begin_interval_time))*60+
+           EXTRACT (SECOND FROM (end_interval_time-begin_interval_time)) DELTA
+           from dba_hist_snapshot n) ts,
+(select * from tlist where stat_name = 'DB CPU') t2,
+(select * from tlist where stat_name = 'BUSY_TIME') t8,
+(select * from tlist where stat_name = 'IDLE_TIME') t9,
+(select * from tlist where stat_name = 'sql execute elapsed time') t1,
+(select end_snap_id, sum(value) value from tlist where stat_name != 'Disk file operations I/O' and wait_class = 'User I/O' group by end_snap_id) t3,
+(select * from tlist where stat_name = 'Disk file operations I/O') t7,
+(select end_snap_id, sum(value) value from tlist where stat_name != 'buffer busy waits' and wait_class = 'Concurrency' group by end_snap_id) t4,
+(select * from tlist where stat_name = 'buffer busy waits') t5,
+(select end_snap_id, sum(value) value from tlist where stat_name like 'log file switch%' group by end_snap_id) tlf,
+(select * from tlist where stat_name = 'log file sync') t6,
+(select * from DBA_HIST_SYSMETRIC_SUMMARY where metric_name = 'Redo Generated Per Sec') tr,
+(select * from DBA_HIST_SYSMETRIC_SUMMARY where metric_name = 'Physical Reads Per Sec') tpr,
+(select * from DBA_HIST_SYSMETRIC_SUMMARY where metric_name = 'DB Block Changes Per Sec') tc,
+(select * from DBA_HIST_SYSMETRIC_SUMMARY where metric_name = 'Physical Writes Per Sec') tpw,
+(select * from DBA_HIST_SYSMETRIC_SUMMARY where metric_name = 'User Transaction Per Sec') tt
+where t.stat_name = 'DB time' and t.wait_class = 'Model'
+and ts.snap_id = t.end_snap_id
+and t.end_snap_id = t1.end_snap_id (+)
+and t.end_snap_id = tlf.end_snap_id (+)
+and t.end_snap_id = t6.end_snap_id (+)
+and t.end_snap_id = t2.end_snap_id (+)
+and t.end_snap_id = t3.end_snap_id (+)
+and t.end_snap_id = t4.end_snap_id (+)
+and t.end_snap_id = t5.end_snap_id (+)
+and t.end_snap_id = t7.end_snap_id (+)
+and t.end_snap_id = t8.end_snap_id (+)
+and t.end_snap_id = t9.end_snap_id (+)
+and t.end_snap_id = tr.snap_id (+)
+and t.end_snap_id = tpr.snap_id (+)
+and t.end_snap_id = tc.snap_id (+)
+and t.end_snap_id = tpw.snap_id (+)
+and t.end_snap_id = tt.snap_id (+)
+order by 2 desc
+
+--**************************************** lab comparison ************************************************
+
+WITH tsnaps AS
+  (SELECT *
+  FROM TABLE(job_compare_core_fn('ditl_pw_2015r2_b17', 'ditl_radd015_b03'))
+  ),
+  tevent AS
+  (SELECT t1.jobid,
+    t1.snap_id begin_snap_id,
+    t2.snap_id end_snap_id,
+    t2.event_name stat_name,
+    t2.wait_class,
+    (t2.total_waits             - t1.total_waits) total_waits,
+    (t2.total_timeouts          - t1.total_timeouts) total_timeouts,
+    ROUND((t2.time_waited_micro - t1.time_waited_micro) / 1000000) value
+  FROM LAB_HIST_SYSTEM_EVENT t1,
+    LAB_HIST_SYSTEM_EVENT t2
+  WHERE t1.jobid     =t2.jobid
+  AND t1.snap_id + 1 = t2.snap_id
+  AND t1.wait_class <> 'Idle'
+  AND t1.wait_class  = t2.wait_class
+  AND t1.event_name  = t2.event_name
+  ),
+  tmodel AS
+  (SELECT t1.jobid,
+    t1.snap_id begin_snap_id,
+    t2.snap_id end_snap_id,
+    t2.stat_name,
+    'Model',
+    0,
+    0,
+    ((t2.value - t1.value) / 1000000) value
+  FROM lab_hist_sys_time_model t1,
+    lab_hist_sys_time_model t2
+  WHERE t1.jobid     =t2.jobid
+  AND t1.snap_id + 1 = t2.snap_id
+  AND t1.stat_name   = t2.stat_name
+  ),
+  tosstat AS
+  (SELECT t1.jobid,
+    t1.snap_id begin_snap_id,
+    t2.snap_id end_snap_id,
+    t2.stat_name,
+    'OS',
+    0,
+    0,
+    ((t2.value - t1.value) / 100) value
+  FROM LAB_HIST_OSSTAT t1,
+    LAB_HIST_OSSTAT t2
+  WHERE t1.jobid     =t2.jobid
+  AND t1.snap_id + 1 = t2.snap_id
+  AND t1.stat_name   = t2.stat_name
+  ),
+  mylist AS
+  (SELECT t1.*,
+    EXTRACT (DAY FROM (t1.end_interval_time-t1.begin_interval_time))*24*60*60+ EXTRACT (HOUR FROM (t1.end_interval_time-t1.begin_interval_time))*60*60+ EXTRACT (MINUTE FROM (t1.end_interval_time-t1.begin_interval_time))*60+ EXTRACT (SECOND FROM (t1.end_interval_time-t1.begin_interval_time)) DELTA,
+    t2.stat_name,
+    t2.wait_class,
+    t2.value,
+    1 stat_seq
+  FROM tsnaps t1,
+    tevent t2
+  WHERE t1.jobid       = t2.jobid
+  AND t1.begin_snap_id = t2.begin_snap_id
+  AND t2.value         > 0
+  UNION ALL
+  SELECT t1.*,
+    EXTRACT (DAY FROM (t1.end_interval_time-t1.begin_interval_time))*24*60*60+ EXTRACT (HOUR FROM (t1.end_interval_time-t1.begin_interval_time))*60*60+ EXTRACT (MINUTE FROM (t1.end_interval_time-t1.begin_interval_time))*60+ EXTRACT (SECOND FROM (t1.end_interval_time-t1.begin_interval_time)) DELTA,
+    t2.stat_name,
+    'Model',
+    t2.value,
+    2 stat_seq
+  FROM tsnaps t1,
+    tmodel t2
+  WHERE t1.jobid       = t2.jobid
+  AND t1.begin_snap_id = t2.begin_snap_id
+  AND t2.value         > 0
+  UNION ALL
+  SELECT t1.*,
+    EXTRACT (DAY FROM (t1.end_interval_time-t1.begin_interval_time))*24*60*60+ EXTRACT (HOUR FROM (t1.end_interval_time-t1.begin_interval_time))*60*60+ EXTRACT (MINUTE FROM (t1.end_interval_time-t1.begin_interval_time))*60+ EXTRACT (SECOND FROM (t1.end_interval_time-t1.begin_interval_time)) DELTA,
+    t2.stat_name,
+    'OS',
+    t2.value,
+    3 stat_seq
+  FROM tsnaps t1,
+    tmodel t2
+  WHERE t1.jobid       = t2.jobid
+  AND t1.begin_snap_id = t2.begin_snap_id
+  AND t2.value         > 0
+  ),
+  myfinal1 AS
+  (SELECT t.* ,
+    t0.name db_name,
+    TO_CHAR(t.begin_interval_time, 'DAY') dow,
+    TO_CHAR(t.begin_interval_time, 'MM/DD/YYYY') beg_dt,
+    TO_CHAR(t.begin_interval_time, 'HH24:MI') beg_hr,
+    ROUND((t8.value    +t9.value)/t.delta, 0) host_cpus,
+    ROUND(t.delta      /60, 1) snap_delta,
+    ROUND(t8.value     /60, 0) host_cpu,
+    ROUND(t9.value     /60, 0) host_idle,
+    ROUND(t8.value     /t.delta, 1) host_cpu_use,
+    ROUND(t.value      /60, 0) db_time,
+    ROUND(t2.value     /60, 0) db_cpu,
+    ROUND(t2.value     /t.delta, 1) db_cpus,
+    ROUND(t1.value     /60, 0) sql_time,
+    ROUND((t.value     -t2.value)/60, 0) db_other,
+    NVL(ROUND(t3.value /60, 0), 0) user_io,
+    NVL(ROUND(t4.value /60, 0), 0) concur,
+    NVL(ROUND(t7.value /60, 0), 0) disk_time,
+    NVL(ROUND(tlf.value/60, 0), 0) log_file_swtch,
+    NVL(ROUND(t6.value /60, 0), 0) log_file_sync,
+    NVL(ROUND(t5.value /60, 0), 0) buf_busy,
+    ROUND(tr.average, 0) redo,
+    ROUND(tpr.average, 0) phy_reads,
+    ROUND(tc.average, 0) block_chgs,
+    ROUND(tpw.average, 0) phy_write,
+    ROUND(tt.average, 0) trans,
+    ROUND(tr.average*t.delta, 0) tot_redo,
+    ROUND(tt.average*t.delta, 0) tot_trans
+  FROM mylist t,
+    (SELECT jobid,
+      SUM(value) value
+    FROM mylist
+    WHERE stat_name = 'DB CPU'
+    GROUP BY jobid
+    ) t2,
+    (SELECT jobid,
+      SUM(value) value
+    FROM mylist
+    WHERE stat_name = 'BUSY_TIME'
+    GROUP BY jobid
+    ) t8,
+    (SELECT jobid,
+      SUM(value) value
+    FROM mylist
+    WHERE stat_name = 'IDLE_TIME'
+    GROUP BY jobid
+    ) t9,
+    (SELECT jobid,
+      SUM(value) value
+    FROM mylist
+    WHERE stat_name = 'sql execute elapsed time'
+    GROUP BY jobid
+    ) t1,
+    (SELECT jobid,
+      SUM(value) value
+    FROM mylist
+    WHERE stat_name != 'Disk file operations I/O'
+    AND wait_class   = 'User I/O'
+    GROUP BY jobid
+    )t3,
+    (SELECT jobid,
+      SUM(value) value
+    FROM mylist
+    WHERE stat_name = 'Disk file operations I/O'
+    GROUP BY jobid
+    ) t7,
+    (SELECT jobid,
+      SUM(value) value
+    FROM mylist
+    WHERE stat_name != 'buffer busy waits'
+    AND wait_class   = 'Concurrency'
+    GROUP BY jobid
+    ) t4,
+    (SELECT jobid,
+      SUM(value) value
+    FROM mylist
+    WHERE stat_name = 'buffer busy waits'
+    GROUP BY jobid
+    ) t5,
+    (SELECT jobid,
+      SUM(value) value
+    FROM mylist
+    WHERE stat_name LIKE 'log file switch%'
+    GROUP BY jobid
+    ) tlf,
+    (SELECT jobid,
+      SUM(value) value
+    FROM mylist
+    WHERE stat_name = 'log file sync'
+    GROUP BY jobid
+    ) t6,
+    (SELECT jobid,
+      MAX(average) AS average
+    FROM LAB_HIST_SYSMETRIC_SUMMARY
+    WHERE metric_name = 'Redo Generated Per Sec'
+    GROUP BY jobid
+    ) tr,
+    (SELECT jobid,
+      MAX(average) AS average
+    FROM LAB_HIST_SYSMETRIC_SUMMARY
+    WHERE metric_name = 'Physical Reads Per Sec'
+    GROUP BY jobid
+    ) tpr,
+    (SELECT jobid,
+      MAX(average) AS average
+    FROM LAB_HIST_SYSMETRIC_SUMMARY
+    WHERE metric_name = 'DB Block Changes Per Sec'
+    GROUP BY jobid
+    ) tc,
+    (SELECT jobid,
+      MAX(average) AS average
+    FROM LAB_HIST_SYSMETRIC_SUMMARY
+    WHERE metric_name = 'Physical Writes Per Sec'
+    GROUP BY jobid
+    ) tpw,
+    (SELECT jobid,
+      MAX(average) AS average
+    FROM LAB_HIST_SYSMETRIC_SUMMARY
+    WHERE metric_name = 'User Transaction Per Sec'
+    GROUP BY jobid
+    ) tt,
+    (SELECT jobid,name FROM lab_database
+    )t0
+  WHERE t.stat_name = 'DB time'
+  AND t.wait_class  = 'Model'
+  AND t.jobid       =t2.jobid(+)
+  AND t.jobid       =t8.jobid(+)
+  AND t.jobid       =t9.jobid(+)
+  AND t.jobid       =t3.jobid(+)
+  AND t.jobid       =t6.jobid(+)
+  AND t.jobid       =t7.jobid(+)
+  AND t.jobid       =t4.jobid(+)
+  AND t.jobid       =t5.jobid(+)
+  AND t.jobid       =tlf.jobid(+)
+  AND t.jobid       =tr.jobid(+)
+  AND t.jobid       =tpr.jobid(+)
+  AND t.jobid       =tc.jobid(+)
+  AND t.jobid       =tpw.jobid(+)
+  AND t.jobid       =tt.jobid(+)
+  AND t.jobid       =t0.jobid(+)
+  ),
+  myfinal2 AS
+  (SELECT t.*
+  FROM
+    (SELECT f.*,
+      row_number()over(partition BY jobid order by ref_id)rn
+    FROM myfinal1 f
+    )t
+  WHERE t.rn<2
+  )
+SELECT t1.run_name run_name_old,
+  t2.run_name run_name_new,
+  t0.job_name,
+  t1.db_name        AS old_db_name,
+  t2.db_name        AS new_db_name,
+  t1.dow            AS old_dow,
+  t2.dow            AS new_dow,
+  t1.beg_dt         AS old_beg_dt,
+  t2.beg_dt         AS new_beg_dt,
+  t1.beg_hr         AS old_beg_hr,
+  t2.beg_hr         AS new_beg_hr,
+  t1.host_cpus      AS old_host_cpus,
+  t2.host_cpus      AS new_host_cpus,
+  t1.snap_delta     AS old_snap_delta,
+  t2.snap_delta     AS new_snap_delta,
+  t1.host_cpu       AS old_host_cpu,
+  t2.host_cpu       AS new_host_cpu,
+  t1.host_idle      AS old_host_idle,
+  t2.host_idle      AS new_host_idle,
+  t1.host_cpu_use   AS old_host_cpu_use,
+  t2.host_cpu_use   AS new_host_cpu_use,
+  t1.db_time        AS old_db_time,
+  t2.db_time        AS new_db_time,
+  t1.db_cpu         AS old_db_dpu,
+  t2.db_cpu         AS new_db_cpu,
+  t1.db_cpus        AS old_db_cpus,
+  t2.db_cpus        AS new_db_cpus,
+  t1.sql_time       AS old_sql_time,
+  t2.sql_time       AS new_sql_time,
+  t1.db_other       AS old_db_other,
+  t2.db_other       AS new_db_other,
+  t1.user_io        AS old_user_io,
+  t2.user_io        AS new_user_io,
+  t1.concur         AS old_concur,
+  t2.concur         AS new_concur,
+  t1.disk_time      AS old_disk_time,
+  t2.disk_time      AS new_disk_time,
+  t1.log_file_swtch AS old_log_file_swtch,
+  t2.log_file_swtch AS new_log_file_swtch,
+  t1.log_file_sync  AS old_log_file_sync,
+  t2.log_file_sync  AS new_log_file_sync,
+  t1.buf_busy       AS old_buf_busy,
+  t2.buf_busy       AS new_buf_busy,
+  t1.redo           AS old_redo,
+  t2.redo           AS new_redo,
+  t1.phy_reads      AS old_phy_reads,
+  t2.phy_reads      AS new_phy_reads,
+  t1.block_chgs     AS old_block_chgs,
+  t2.block_chgs     AS new_block_chgs,
+  t1.phy_write      AS old_phy_write,
+  t2.phy_write      AS new_phy_write,
+  t1.trans          AS old_trans,
+  t2.trans          AS new_trans,
+  t1.tot_redo       AS old_tot_redo,
+  t2.tot_redo       AS new_tot_redo,
+  t1.tot_trans      AS old_tot_trans,
+  t2.tot_trans      AS new_tot_trans
+FROM
+  (SELECT ref_id, job_name FROM myfinal2 GROUP BY job_name,ref_id
+  ) t0,
+  (SELECT * FROM myfinal2 WHERE runid = 1
+  ) t1,
+  (SELECT * FROM myfinal2 WHERE runid = 2
+  ) t2
+WHERE t0.job_name = t1.job_name(+)
+AND t0.job_name   = t2.job_name(+)
+ORDER BY t0.ref_id,
+  t0.job_name
