@@ -1,0 +1,292 @@
+################################################################################
+## File         : setsid.sh
+## Author       : Matt Myers
+##
+## Description  : Setup envirnoment for access to Oracle database instances.
+##                If it is an interactive login, then the script will prompt
+##                the user to select a database instance name from a list
+##                created from oratab file found on the server.
+##
+## Change History:
+##      25-MAR-19  Matt Myers
+##      Created.
+################################################################################
+DBA_Initialization ()
+{
+    if [[ "${ORAENV_ASK}" = "NO" ]]
+    then
+        DBA_NEW_SID=${1:-${ORACLE_SID}}
+    else
+        DBA_NEW_SID=$1
+    fi
+
+    DBA_TAB_FILES="/etc/oratab /var/opt/oracle/oratab"
+    DBA_TOOLS_DIRS="/eainfra/dba/tools ${HOME}/tools /usr/local/scripts/dba/tools"
+    DBA_RDBMS_BASE_DIRS="/u02/app/oracle /u01/app/oracle /u01/oracle_11204/app/oracle"
+    DBA_GRID_BASE_DIRS="/u01/app/gridbase /u01/oracle_11204/app/grid /u01/app/grid"
+
+    DBA_TTY=$(tty|grep -v "not")
+
+    for TMP_TOOLS_DIR in ${DBA_TOOLS_DIRS}
+    do
+        if [[ -d ${TMP_TOOLS_DIR} ]]
+        then
+            DBA_TOOLS_DIR=${TMP_TOOLS_DIR}
+            break
+        fi
+    done
+
+    if [[ "${DBA_TOOLS_DIR}" = "" ]]
+    then
+        echo "ERROR:Unable to find tools directory"
+    fi
+
+    for TMP_TAB_FILE in ${DBA_TAB_FILES}
+    do
+        if [[ -a ${TMP_TAB_FILE} ]]
+        then
+            DBA_TAB_FILE=${TMP_TAB_FILE}
+            break
+        fi
+    done
+
+    if [[ "${DBA_TAB_FILE}" = "" ]]
+    then
+        echo "ERROR:Unable to find oratab file"
+    fi
+
+    for TMP_BASE_DIR in ${DBA_RDBMS_BASE_DIRS}
+    do
+        if [[ -d ${TMP_BASE_DIR} ]]
+        then
+            DBA_RDBMS_BASE_DIR=${TMP_BASE_DIR}
+            break
+        fi
+    done
+
+    for TMP_BASE_DIR in ${DBA_GRID_BASE_DIRS}
+    do
+        if [[ -d ${TMP_BASE_DIR} ]]
+        then
+            DBA_GRID_BASE_DIR=${TMP_BASE_DIR}
+            break
+        fi
+    done
+}
+
+DBA_Select_Oracle_SID ()
+{
+    unset ASM_SID_LIST
+    unset OGG_SID_LIST
+    unset DBA_SID_LIST
+
+    ASM_SID_LIST="$(grep '^+ASM' ${DBA_TAB_FILE:-XxXx} 2>/dev/null|awk -F: 'BEGIN{ORS=" "} {print $1}')"
+    DBA_SID_LIST="$(grep -v '^#' ${DBA_TAB_FILE:-XxXx} 2>/dev/null|grep -v '^+ASM'|grep -v '^*'|awk -F: 'BEGIN{ORS=" "} {print $1}')"
+    OGG_SID_LIST="$(ls ~/gg.env ~oracle/gg.env 2>/dev/null|sed 's~/.*/~~g'|sed 's~\..*~~g'|sort -u)"
+    DBA_SID_LIST="${DBA_SID_LIST} $(ls ~/*.env ~oracle/*.env 2>/dev/null|grep -v '/dba.env'|grep -v '/gg.env'|sed 's~/.*/~~g'|sed 's~\..*~~g'|sort -u)"
+    DBA_SID_LIST=$(echo "${DBA_SID_LIST}"|tr " " "\n"|sort -u|tr "\n" " ")
+
+    DBA_SID_LIST="${DBA_SID_LIST}${OGG_SID_LIST:+ }${OGG_SID_LIST}${ASM_SID_LIST:+ }${ASM_SID_LIST}"
+
+    if [[ $(echo ${DBA_SID_LIST}|sed 's/ //g') != "" ]]
+    then
+        DBA_SID_LIST="${DBA_SID_LIST} None_of_the_Above"
+
+        PS3="
+Please select an instance by entering the number -> "
+
+        select DBA_NEW_SID in ${DBA_SID_LIST}
+        do
+            set -- $REPLY
+            if  [ ${DBA_NEW_SID:-none} = 'none' ]
+            then
+                echo
+                echo "No selection made"
+                echo
+                echo  "Environment Variables Remain Unchanged"
+                echo
+
+                break
+            elif [ ${DBA_NEW_SID} = 'None_of_the_Above' ]
+            then
+                echo
+                echo  "You have chosen ${DBA_NEW_SID}"
+                echo
+                echo  "Environment Variables Remain Unchanged"
+                echo
+
+                break
+            else
+                echo
+                echo  "You have chosen ${DBA_NEW_SID}"
+
+                DBA_Set_Oracle_Env
+
+                break
+            fi
+        done
+    else
+        echo "No Oracle SID entries found. Setting default environment."
+    fi
+}
+
+DBA_Set_Oracle_Env ()
+{
+    if [[ -a ~/${DBA_NEW_SID}.env ]]
+    then
+        echo "Setting up environment via ~/${DBA_NEW_SID}.env"
+        . ~/${DBA_NEW_SID}.env
+    elif [[ -a ~oracle/${DBA_NEW_SID}.env ]]
+    then
+        echo "Setting up environment via ~oracle/${DBA_NEW_SID}.env"
+        . ~oracle/${DBA_NEW_SID}.env
+    else
+        echo "Setting up environment via /etc/oratab"
+        export ORACLE_SID=${DBA_NEW_SID}
+        export ORACLE_HOME=$(grep "^${ORACLE_SID}:" ${DBA_TAB_FILE} 2>/dev/null|awk -F: '{print $2}'|head -1)
+        export ORA_NLS33=${ORACLE_HOME:-/UNSET_HOME}/ocommon/nls/admin/data
+        export LD_LIBRARY_PATH=${ORACLE_HOME:-/UNSET_HOME}/lib
+        export PATH=/usr/kerberos/bin:/usr/local/bin:/bin:/usr/bin:usr/sbin:/usr/openwin/bin
+        export PATH=$PATH:${ORACLE_HOME:-/UNSET_HOME}/bin:${ORACLE_HOME:-/UNSET_HOME}/OPatch
+        export SHLIB_PATH=${ORACLE_HOME:-/UNSET_HOME}/lib:/usr/lib
+
+        if [[ $(echo "${ORACLE_SID}"|cut -c1-4) = "+ASM" ]]
+        then
+            if [[ "${DBA_GRID_BASE_DIR}" = "" ]]
+            then
+                echo "ERROR:Unable to find GRID base directory"
+            else
+                export ORACLE_BASE=${DBA_GRID_BASE_DIR}
+            fi
+        else
+            if [[ "${DBA_RDBMS_BASE_DIR}" = "" ]]
+            then
+                echo "ERROR:Unable to find RDBMS base directory"
+            else
+                export ORACLE_BASE=${DBA_RDBMS_BASE_DIR}
+            fi
+        fi
+    fi
+
+    export PATH=$PATH:.
+
+    DBA_Display_Env
+
+    if [[ "${ORACLE_HOME}" = "" ]]
+    then
+        echo "ERROR:Unable to find SID \"${DBA_NEW_SID}\" in ${DBA_TAB_FILE} or ${DBA_NEW_SID}.env"
+    fi
+}
+
+DBA_Setup_Oracle_Env ()
+{
+    if [[ ! $(grep "^${DBA_NEW_SID}:" ${DBA_TAB_FILE:-XxXx} 2>/dev/null) ]]
+    then
+        DBA_NEW_SID_ORIG="${DBA_NEW_SID}"
+        unset DBA_NEW_SID
+    fi
+
+    if [[ "${DBA_NEW_SID}" != "" ]]
+    then
+        DBA_Set_Oracle_Env
+    else
+        if [[ "${DBA_TTY}" != "" ]]
+        then
+            if [[ "${ORAENV_ASK}" != "NO" ]]
+            then
+                DBA_Select_Oracle_SID
+            else
+                echo "ERROR:Must pass ORACLE_SID as parameter for interactive environment setup when ORAENV_ASK=NO"
+            fi
+        else
+            DBA_NEW_SID=${ORACLE_SID}
+            if [[ "${DBA_NEW_SID}" != "" ]]
+            then
+                DBA_Set_Oracle_Env
+            else
+                echo "ERROR:Must pass ORACLE_SID as parameter for non-interactive environment setup"
+            fi
+        fi
+    fi
+}
+
+DBA_Setup_Goldengate_Env ()
+{
+    let OGG_MAX_DATE=0
+    #unset OGG_HOME GG_HOME GGHOME
+
+    for OGG_SRCH_DIR in /u01/app/goldengate/product /u01/app/oracle/product /u01/oracle_11204/app/oracle/product
+    do
+        OGG_SRCH_FILE=$(ls -l --time-style=+%Y%m%d%H%M%S ${OGG_SRCH_DIR}/*/ggserr.log 2>/dev/null|awk '{print $6":"$7}'|sort -nr|head -1)
+        if [[ "${OGG_SRCH_FILE}" != "" ]]
+        then
+            let OGG_CHECK_DATE=$(echo ${OGG_SRCH_FILE}|awk -F: '{print $1}')
+            OGG_CHECK_FILE=$(echo ${OGG_SRCH_FILE}|awk -F: '{print $2}')
+            OGG_CHECK_DIR=${OGG_CHECK_FILE%/*}
+
+            if (( OGG_CHECK_DATE > OGG_MAX_DATE ))
+            then
+                if [[ -a ${OGG_CHECK_DIR}/ggsci ]]
+                then
+                    let OGG_MAX_DATE=OGG_CHECK_DATE
+                    export OGG_HOME=${OGG_CHECK_DIR}
+                    export GG_HOME=${OGG_CHECK_DIR}
+                    export GGHOME=${OGG_CHECK_DIR}
+                fi
+            fi
+        fi
+    done
+}
+
+DBA_Set_Interactive_Variables ()
+{
+    if [[ "${DBA_TTY}" != "" ]]
+    then
+        export CDPATH=.:${DBA_TOOLS_DIR}:${DBA_TOOLS_DIR%/*}:${DBA_TOOLS_DIR}/tmp:/eainfra/dba/release
+        export PATH=${PATH}:${DBA_TOOLS_DIR}/bin
+        export ORACLE_PATH=.:${DBA_TOOLS_DIR}/sql
+
+        HOSTNAME=$(echo $(hostname) | awk -F "." '{print $1}')
+        #export PS1="${LOGNAME}@${HOSTNAME}:[\${ORACLE_SID}] -> "
+        export PS1="${LOGNAME}@${HOSTNAME}:[\${ORACLE_SID}] \$PWD
+-> "
+
+        export TMOUT=0
+        export HISTSIZE=1000
+        export HISTFILE=${HOME}/.history/${LOGNAME}_history.$$
+        mkdir -p ${HISTFILE%/*} 2>/dev/null
+        find ${HISTFILE%/*} -name "${LOGNAME}_history.*" -mtime +7 -user ${LOGNAME} -exec rm -f {} \;
+
+        unset DBA_NEW_SID
+
+        set -o vi
+    fi
+}
+
+DBA_Display_Env ()
+{
+    echo -e "\n"
+    echo -e "ORACLE_SID  = ${ORACLE_SID}"
+    echo -e "ORACLE_BASE = ${ORACLE_BASE}"
+    echo -e "ORACLE_HOME = ${ORACLE_HOME}"
+    echo -e "ORA_NLS33   = ${ORA_NLS33}"
+    echo -e "PATH        = ${PATH}"
+    echo -e "LD_LIBRARY_PATH = ${LD_LIBRARY_PATH}"
+    echo -e "\n"
+}
+
+################################################################################
+## Main Program
+################################################################################
+INSTALLSTUB=/var/tmp/nosid
+if [[ ! -e ${INSTALLSTUB} ]]
+then
+    DBA_Initialization $@
+
+    DBA_Setup_Goldengate_Env
+
+    DBA_Setup_Oracle_Env
+
+    DBA_Set_Interactive_Variables
+fi
+
