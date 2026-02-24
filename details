@@ -1,0 +1,3544 @@
+I'm happy to share that I've been promoted to a new role as Lead Analyst - Performance and Availability Engineer at BNY Mellon
+
+Important query - TRUNCATE
+
+select * from pace_masterdbo.pace_hosts_def;
+select * from pace_masterdbo.host_def_details;
+select * from pace_masterdbo.pace_ftp_def;
+select * from pace_masterdbo.schedule_def_details;
+select * from pace_masterdbo.schedule_queue;
+select * from pace_masterdbo.pace_app_hosts_def;
+select * from pace_masterdbo.email_process;
+
+truncate table pace_masterdbo.host_def_details;
+truncate table pace_masterdbo.schedule_def_details;
+truncate table pace_masterdbo.schedule_queue;
+truncate table pace_masterdbo.email_process;
+truncate table estar.engine_configuration;
+truncate table estar.engine_instances;
+truncate table eaglemgr.eagle_services; 
+truncate table eaglemgr.eagle_services_hist; 
+truncate table estar.engine_configuration_hist;  
+truncate table eaglemgr.eagle_service_properties;  
+truncate table eaglemgr.eagle_service_relations;
+
+delete from eaglemgr.eagle_services where server_HOST like '%CGUSER.CAPGROUP.COM%'
+delete from eaglemgr.eagle_services_hist where server_HOST like '%CGUSER.CAPGROUP.COM%'
+delete from estar.engine_configuration_hist where engine_name like '%CGUSER.CAPGROUP.COM%'
+delete from eaglemgr.eagle_service_properties where property_value like '%CGUSER.CAPGROUP.COM%' and '%cguser.capgroup.com%'
+
+select * from estar.engine_configuration;
+select * from estar.engine_instances;
+select * from estar.engine_configuration_hist;
+select * from msgcenter_dbo.msg_instances;
+select * from msgcenter_dbo.msg_instance_services;
+select * from msgcenter_dbo.msg_mc_failover;
+
+alter user pace_masterdbo identified by eagle account unlock;
+alter user estar identified by eagle account unlock;
+alter user etk_user identified by eagle account unlock;
+alter user ctrlctr identified by eagle account unlock;
+alter user arch_ctrlctr identified by eagle account unlock;
+alter user sys identified by EglOci12 account unlock;
+alter user system identified by eagle account unlock;
+alter user DATAMARTDBO identified by eagle account unlock;
+alter user eaglemart identified by eagle account unlock;
+
+alter user pace_masterdbo identified by DITLrun1 account unlock;
+alter user estar identified by DITLrun1 account unlock;
+alter user etk_user identified by DITLrun1 account unlock;
+alter user ctrlctr identified by DITLrun1 account unlock;
+alter user arch_ctrlctr identified by DITLrun1 account unlock;
+alter user sys identified by LufsSys12# account unlock;
+alter user system identified by LufsSys12# account unlock;
+
+alter user pace_masterdbo identified by templab1 account unlock;
+alter user estar identified by templab1 account unlock;
+alter user etk_user identified by templab1 account unlock;
+alter user ctrlctr identified by templab1 account unlock;
+alter user arch_ctrlctr identified by templab1 account unlock;
+alter user sys identified by LufsSys12# account unlock;
+alter user system identified by LufsSys12# account unlock;
+
+alter user pace_masterdbo identified by eagle123 account unlock;
+alter user estar identified by eagle123 account unlock;
+alter user etk_user identified by eagle123 account unlock;
+alter user ctrlctr identified by eagle123 account unlock;
+alter user arch_ctrlctr identified by eagle123 account unlock;
+alter user sys identified by eagle123 account unlock;
+alter user system identified by eagle123 account unlock;
+
+New Standard
+
+alter user pace_masterdbo identified by DITLrun1 account unlock;
+alter user estar identified by DITLrun1 account unlock;
+alter user etk_user identified by DITLrun1 account unlock;
+alter user ctrlctr identified by DITLrun1 account unlock;
+alter user arch_ctrlctr identified by DITLrun1 account unlock;
+alter user sys identified by LufsSys12# account unlock;
+alter user system identified by LufsSys12# account unlock;
+
+************************ ddboost *************************
+
+List the files under ddboost storage unit folder
+export RMAN_AGENT_HOME=/u01/app/ddboost_agent;/u01/app/ddboost_agent/bin/ddutil -f -R -T asc -z ddve01-earnd-use2.eagleinvsys.com:/rdq-su ./usfa03/usfa03_r202512_14022026
+
+export RMAN_AGENT_HOME=/u01/app/ddboost_agent;/u01/app/ddboost_agent/bin/ddutil -f -R -T asc -z ddve01-eaprod-use2.eagleaccess.com:/avs-su ./avsc001
+
+Catalog the backup pieces
+run {
+configure  CHANNEL DEVICE TYPE SBT_TAPE PARMS 'BLKSIZE=1048576,SBT_LIBRARY=/u01/app/ddboost_agent45/lib/libddobk.so, ENV=(STORAGE_UNIT=rad-su,  BACKUP_HOST=tplb0003-bkup1.eagleaccess.com,RMAN_AGENT_HOME=/u01/app/ddboost_agent45, DDBOOST_COMPRESSED_RESTORE=TRUE)';
+catalog device type 'SBT_TAPE' backuppiece './prfl001_gold_copy_07042025_1/PRFL001_COLD_20250418_pl3n7ihj_13109_1_1_dtbs';
+catalog device type 'SBT_TAPE' backuppiece './prfl001_gold_copy_07042025_1/PRFL001_COLD_20250418_po3n7ihj_13112_1_1_dtbs';
+catalog device type 'SBT_TAPE' backuppiece './prfl001_gold_copy_07042025_1/PRFL001_COLD_20250418_pj3n7ihj_13107_1_1_dtbs';
+catalog device type 'SBT_TAPE' backuppiece './prfl001_gold_copy_07042025_1/PRFL001_COLD_20250418_pk3n7ihj_13108_1_1_dtbs';
+catalog device type 'SBT_TAPE' backuppiece './prfl001_gold_copy_07042025_1/PRFL001_COLD_20250418_pm3n7ihj_13110_1_1_dtbs';
+catalog device type 'SBT_TAPE' backuppiece './prfl001_gold_copy_07042025_1/PRFL001_COLD_20250418_pi3n7ihj_13106_1_1_dtbs';
+catalog device type 'SBT_TAPE' backuppiece './prfl001_gold_copy_07042025_1/PRFL001_COLD_20250418_pt3n7ihk_13117_1_1_dtbs';
+catalog device type 'SBT_TAPE' backuppiece './prfl001_gold_copy_07042025_1/PRFL001_COLD_20250418_pv3n7ihk_13119_1_1_dtbs';
+catalog device type 'SBT_TAPE' backuppiece './prfl001_gold_copy_07042025_1/PRFL001_COLD_20250418_q93n8kq2_13129_1_1_dtbs';
+catalog device type 'SBT_TAPE' backuppiece './prfl001_gold_copy_07042025_1/PRFL001_COLD_20250418_pp3n7ihk_13113_1_1_dtbs';
+catalog device type 'SBT_TAPE' backuppiece './prfl001_gold_copy_07042025_1/PRFL001_COLD_20250418_pn3n7ihj_13111_1_1_dtbs';
+catalog device type 'SBT_TAPE' backuppiece './prfl001_gold_copy_07042025_1/PRFL001_COLD_20250418_ps3n7ihk_13116_1_1_dtbs';
+catalog device type 'SBT_TAPE' backuppiece './prfl001_gold_copy_07042025_1/PRFL001_COLD_20250418_q03n7ihl_13120_1_1_dtbs';
+catalog device type 'SBT_TAPE' backuppiece './prfl001_gold_copy_07042025_1/PRFL001_COLD_20250418_pr3n7ihk_13115_1_1_dtbs';
+catalog device type 'SBT_TAPE' backuppiece './prfl001_gold_copy_07042025_1/PRFL001_COLD_20250418_pu3n7ihk_13118_1_1_dtbs';
+catalog device type 'SBT_TAPE' backuppiece './prfl001_gold_copy_07042025_1/PRFL001_COLD_20250418_pq3n7ihk_13114_1_1_dtbs';
+catalog device type 'SBT_TAPE' backuppiece './prfl001_gold_copy_07042025_1/PRFL001_COLD_20250418_q13n7ihl_13121_1_1_dtbs';
+catalog device type 'SBT_TAPE' backuppiece './prfl001_gold_copy_07042025_1/PRFL001_COLD_20250418_q33n8jjm_13123_1_1_dtbs';
+catalog device type 'SBT_TAPE' backuppiece './prfl001_gold_copy_07042025_1/PRFL001_COLD_20250418_q23n8j8r_13122_1_1_dtbs';
+catalog device type 'SBT_TAPE' backuppiece './prfl001_gold_copy_07042025_1/PRFL001_COLD_20250418_q43n8k4p_13124_1_1_dtbs';
+catalog device type 'SBT_TAPE' backuppiece './prfl001_gold_copy_07042025_1/PRFL001_COLD_20250418_q53n8k67_13125_1_1_dtbs';
+catalog device type 'SBT_TAPE' backuppiece './prfl001_gold_copy_07042025_1/PRFL001_COLD_20250418_q63n8kge_13126_1_1_dtbs';
+catalog device type 'SBT_TAPE' backuppiece './prfl001_gold_copy_07042025_1/PRFL001_COLD_20250418_q73n8kje_13127_1_1_dtbs';
+catalog device type 'SBT_TAPE' backuppiece './prfl001_gold_copy_07042025_1/PRFL001_COLD_20250418_q83n8km4_13128_1_1_dtbs';
+catalog device type 'SBT_TAPE' backuppiece './prfl001_gold_copy_07042025_1/controlfile_prfl001_c-2494323643-20250419-00.ctl';
+}
+configure channel device type 'SBT_TAPE' clear;
+
+************ EagleML issue ************
+
+/eagle_ml-2-0_custom_cm/w_config_custom.inc  
+
+<CODE>
+   :W_VALIDATE_MSG_SAFETY: := 'N';
+</CODE>
+
+
+************ SkipBackup Windows **************************
+
+Get-ChildItem -Path 'E:\Eagle_Installs' -Recurse -Filter 'eaglepatch.ini' | ForEach-Object {
+    (Get-Content $_.FullName -Raw) -replace 'SkipBackup=0','SkipBackup=1' | 
+    Set-Content $_.FullName -Encoding ASCII}
+
+Unzip
+
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+
+Get-ChildItem -Path "E:\Eagle_Installs" -Recurse -Filter EAGLE_PATCH.zip | ForEach-Object {
+    $zipFile = $_.FullName
+    $destination = $_.DirectoryName
+
+    try {
+        [System.IO.Compression.ZipFile]::ExtractToDirectory($zipFile, $destination)
+        Write-Host "Extracted: $zipFile"
+    } catch {
+        Write-Warning "Skipped (maybe already extracted or error): $zipFile"
+    }
+}
+
+*********************** holiday calender ***************
+
+https://eagleinvsys.atlassian.net/wiki/spaces/M2/pages/5272469542/DITL+Client+Simulation+Team+Calendar
+
+************** DITL delete/update schedules *******
+delete pace_masterdbo.egl_sched_def_details
+where sq_instance > 0 and effective_date < trunc(sysdate);
+commit;
+update pace_masterdbo.egl_sched_queue
+set status = 2, update_date = sysdate
+where status = 1 and effective_date < trunc(sysdate);
+commit;
+
+************** Performance Metrics ***************
+
+https://eagleinvsys.atlassian.net/wiki/spaces/DATABASE/pages/16027640/Database+Education
+
+https://eagleinvsys.atlassian.net/wiki/spaces/DATABASE/pages/18962522/Oracle
+
+https://eagleinvsys.atlassian.net/wiki/spaces/DATABASE/pages/16024656/Performance+Metrics+SQL
+
+https://eagleinvsys.atlassian.net/wiki/spaces/DATABASE/pages/16025403/SQL+To+Review+Database+Load+Metrics
+
+For this client I would also look for problem SQLs using this:
+
+with snap_list as (SELECT snap_id FROM dba_hist_snapshot WHERE end_interval_time > sysdate - 1), -- reference time frame 1 day
+stat_list as (select sql_id,
+  plan_hash_value,
+  sum(executions_delta) execs,
+  round(sum(elapsed_time_delta)/ 60000000, 0) elapsed,
+  round(sum(cpu_time_delta)/ 60000000, 0) cpu,
+  round(sum(rows_processed_delta) / (sum(nvl(elapsed_time_delta, 0)) / 1000000)) rows_sec
+  from dba_hist_sqlstat
+  where snap_id in (select snap_id from snap_list)
+  and plan_hash_value > 0
+  group by sql_id,
+  plan_hash_value
+    Having Sum(Nvl(Elapsed_Time_Delta, 0)) > 0),
+sql_list as (select sql_id from stat_list group by sql_id having sum(cpu) > 5), -- total greater than 5 minutes CPU over reference time frame
+plan_list as (select t1.*, NVL(t2.num_rows, t3.num_rows) num_rows
+from
+(SELECT distinct object_owner,
+    object_name,
+    operation,
+    OPTIONS,
+    sql_id, plan_hash_value
+  FROM dba_hist_sql_plan
+  WHERE object_owner NOT IN ('SYS', 'SYSTEM')
+  AND OPTIONS LIKE '%FULL%'
+  AND sql_id IN
+    (SELECT sql_id FROM sql_list)) t1,
+  dba_tables t2,
+  dba_indexes t3
+WHERE t1.object_owner = t2.owner (+)
+AND t1.object_name    = t2.table_name (+)
+AND t1.object_owner   = t3.owner (+)
+And T1.Object_Name    = T3.Index_Name (+)
+AND nvl(NVL(t2.num_rows, t3.num_rows), 0) > 1000000)  -- number of rows is > 1 million
+select t.*,
+(select to_char(dbms_lob.substr(sql_text, 4000, 1)) from dba_hist_sqltext st where st.sql_id = t.sql_id and rownum < 2) sql_text 
+from
+(
+  select t1.*,
+  (select count(distinct snap_id) from dba_hist_sqlstat ts where ts.sql_id = t1.sql_id) cnt_awrs,
+  (select count(distinct plan_hash_value) from dba_hist_sqlstat ts where ts.sql_id = t1.sql_id) cnt_plans,
+  t2.object_owner, t2.object_name,
+  round(t2.num_rows/1000000, 1) num_rows, round(t2.num_rows*(t1.execs)/1000000, 1) tot_rows,
+  t2.operation, t2.options
+  from stat_list t1, plan_list t2
+  where t1.sql_id = t2.sql_id
+  and t1.plan_hash_value = t2.plan_hash_value
+  ) t
+  order by sql_id
+
+
+Lastly – to look for problem SQLs across the last 24 hours I would use below (“order by total_elapsed desc” or “order by rows_per_elapsed_sec ):  
+
+with my_list as
+(SELECT t.*, (select to_char(substrb(sql_text, 1, 4000)) from sys.dba_hist_sqltext st where st.sql_id = t.sql_id and rownum < 2) sql_text
+FROM
+  (SELECT /*+ NO_MERGE */ sq.sql_id,
+    COUNT(*) number_of_awrs,
+    SUM(NVL(sq.executions_delta, 0)) total_executions,
+    ROUND(SUM(NVL(sq.cpu_time_delta, 0))/1000000, 2) total_cpu,
+    ROUND(SUM(NVL(sq.elapsed_time_delta, 0))/1000000, 2) total_elapsed,
+    SUM(NVL(sq.buffer_gets_delta, 0)) total_gets,
+    SUM(NVL(sq.disk_reads_delta, 0)) total_disk,
+    SUM(NVL(sq.rows_processed_delta, 0)) total_rows,
+    ROUND(SUM(NVL(sq.rows_processed_delta, 0)) /(decode(SUM(NVL(sq.cpu_time_delta, 0)), 0, 1, SUM(NVL(sq.cpu_time_delta, 0))) / 1000000)) rows_per_cpu_sec,
+    ROUND(SUM(NVL(sq.rows_processed_delta, 0)) /(decode(SUM(NVL(sq.elapsed_time_delta, 0)), 0, 1, SUM(NVL(sq.elapsed_time_delta, 0))) / 1000000)) rows_per_elapsed_sec
+  FROM sys.dba_hist_sqlstat sq,
+    sys.dba_hist_snapshot sn
+  WHERE sn.snap_id IN
+    (SELECT snap_id
+    FROM DBA_HIST_SNAPSHOT
+    WHERE begin_interval_time >sysdate - 1
+    )
+  AND sn.snap_id = sq.snap_id
+  GROUP BY sq.sql_id
+  ) t)
+select * from my_list order by total_elapsed desc
+
+************* CPU DB and Host percentage used **********
+
+DEFINE begin_snap = 36
+DEFINE end_snap   = 37
+
+WITH snap AS (
+    SELECT s1.snap_id   AS begin_snap,
+           s2.snap_id   AS end_snap,
+           s1.end_interval_time AS begin_time,
+           s2.end_interval_time AS end_time
+    FROM   dba_hist_snapshot s1,
+           dba_hist_snapshot s2
+    WHERE  s1.snap_id = &begin_snap
+    AND    s2.snap_id = &end_snap
+    AND    s1.dbid = s2.dbid
+    AND    s1.instance_number = s2.instance_number
+),
+elapsed AS (
+    SELECT begin_snap,
+           end_snap,
+           begin_time,
+           end_time,
+           (EXTRACT(DAY    FROM (end_time - begin_time)) * 86400 +
+            EXTRACT(HOUR   FROM (end_time - begin_time)) * 3600 +
+            EXTRACT(MINUTE FROM (end_time - begin_time)) * 60 +
+            EXTRACT(SECOND FROM (end_time - begin_time))) AS elapsed_secs
+    FROM   snap
+),
+os AS (
+    SELECT b.snap_id,
+           (b.value - a.value)/100 AS busy_secs
+    FROM   dba_hist_osstat a,
+           dba_hist_osstat b
+    WHERE  a.snap_id = &begin_snap
+    AND    b.snap_id = &end_snap
+    AND    a.dbid = b.dbid
+    AND    a.instance_number = b.instance_number
+    AND    a.stat_name = 'BUSY_TIME'
+    AND    b.stat_name = 'BUSY_TIME'
+),
+cpus AS (
+    SELECT snap_id, value AS num_cores
+    FROM   dba_hist_osstat
+    WHERE  snap_id = &end_snap
+    AND    stat_name = 'NUM_CPU_CORES'
+),
+dbcpu AS (
+    SELECT ( (b.value - a.value) / 1000000 ) AS db_cpu_secs
+    FROM   dba_hist_sys_time_model a,
+           dba_hist_sys_time_model b
+    WHERE  a.snap_id = &begin_snap
+    AND    b.snap_id = &end_snap
+    AND    a.dbid = b.dbid
+    AND    a.instance_number = b.instance_number
+    AND    a.stat_name = 'DB CPU'
+    AND    b.stat_name = 'DB CPU'
+)
+SELECT TO_CHAR(e.begin_time,'YYYY-MM-DD HH24:MI') AS begin_time,
+       TO_CHAR(e.end_time,'YYYY-MM-DD HH24:MI')   AS end_time,
+       ROUND( (o.busy_secs / (e.elapsed_secs * c.num_cores)) * 100, 2 ) AS host_cpu_util_pct,
+       ROUND( (d.db_cpu_secs / (e.elapsed_secs * c.num_cores)) * 100, 2 ) AS db_cpu_util_pct
+FROM   elapsed e, os o, cpus c, dbcpu d;
+
+**** Time and Expense ***
+
+https://tex.eagleinvsys.com/
+
+****** EagleML release ***********
+
+2.	1. With overlay files: https://artifactory.devops.eagleinvsys.com/ui/native/rd-release-local/EagleML/ 
+3.	2. Without overlay files: https://artifactory.devops.eagleinvsys.com/ui/native/rd-release-local/EagleML-without-overlays/
+4.	3. Auto-installer: https://artifactory.devops.eagleinvsys.com/ui/native/rd-release-local/EagleInstaller/ 
+
+******** Simplylearn ID ***********
+
+Purdue University - PG-1650449596909
+
+Caltech - Application ID: PG-1650452600864
+
+********** db rename nid ***********
+
+https://dbaclass.com/article/how-to-change-the-oracle-database-name-using-nid-utility/
+
+*********** nls ***********
+
+alter session set nls_date_format='MM/DD/YYYY HH24:MI:SS'; 
+
+**************** Azure PIM ****************
+
+https://portal.azure.com/?feature.msaljs=true#view/Microsoft_Azure_PIMCommon/ActivationMenuBlade/~/aadgroup
+
+******* Blocking SQL ********
+
+select trunc(sql_exec_start) execution_date,BLOCKING_SESSION_STATUS,count(1) from dba_hist_active_sess_history where sql_id='9yu7x4wdr0fh5'
+group by trunc(sql_exec_start),BLOCKING_SESSION_STATUS order by 1 desc,2 desc;
+
+*********** limit sql execution time *************
+
+BEGIN
+  DBMS_RESOURCE_MANAGER.clear_pending_area;
+  DBMS_RESOURCE_MANAGER.create_pending_area;
+
+  -- Create plan
+  DBMS_RESOURCE_MANAGER.create_plan(
+    plan    => 'long_running_query60m',
+    comment => 'Plan to handle long running queries.');
+
+  -- Create consumer groups
+  DBMS_RESOURCE_MANAGER.create_consumer_group(
+    consumer_group => 'CG_NORMAL',
+    comment        => 'Consumer group for normal sessions.');
+
+  -- Assign consumer groups to plan and define priorities
+  DBMS_RESOURCE_MANAGER.create_plan_directive (
+    plan                 => 'long_running_query60m',
+    group_or_subplan     => 'CG_NORMAL',
+    comment              => 'Normal Priority',
+    SWITCH_GROUP		 => 'CANCEL_SQL',
+    SWITCH_TIME			 => 3600,
+    SWITCH_ESTIMATE		 => FALSE,
+    SWITCH_FOR_CALL		 => TRUE);
+
+  DBMS_RESOURCE_MANAGER.create_plan_directive(
+    plan             => 'long_running_query60m',
+    group_or_subplan => 'OTHER_GROUPS',
+    comment          => 'Default');
+
+  DBMS_RESOURCE_MANAGER.validate_pending_area;
+  DBMS_RESOURCE_MANAGER.submit_pending_area;
+END;
+/
+
+BEGIN
+  DBMS_RESOURCE_MANAGER_PRIVS.grant_switch_consumer_group(
+    grantee_name   => 'ESTAR',
+    consumer_group => 'CG_NORMAL',
+    grant_option   => FALSE);
+
+  DBMS_RESOURCE_MANAGER.set_initial_consumer_group('ESTAR', 'CG_NORMAL');
+END;
+/
+
+********************* Example of rman restore point-in-time *************
+
+run
+{
+allocate channel CHN1 DEVICE TYPE DISK;
+allocate channel CHN2 DEVICE TYPE DISK;
+allocate channel CHN3 DEVICE TYPE DISK;
+allocate channel CHN4 DEVICE TYPE DISK;
+allocate channel CHN5 DEVICE TYPE DISK;
+allocate channel CHN6 DEVICE TYPE DISK;
+allocate channel CHN7 DEVICE TYPE DISK;
+allocate channel CHN8 DEVICE TYPE DISK;
+set newname for datafile 8 to '+DATA';
+set newname for datafile 6 to '+DATA';
+set newname for datafile 4 to '+DATA';
+set newname for datafile 7 to '+DATA';
+set newname for datafile 2 to '+DATA';
+set newname for datafile 1 to '+DATA';
+set newname for datafile 5 to '+DATA';
+set newname for datafile 3 to '+DATA';
+set newname for tempfile 2 to '+DATA';
+set newname for tempfile 1 to '+DATA';
+set until time= "to_date('2021-04-30 12:00:00','YYYY-MM-DD HH24:MI:SS')";
+restore database;
+switch datafile all;
+switch tempfile all;
+release channel CHN1;
+release channel CHN2;
+release channel CHN3;
+release channel CHN4;
+release channel CHN5;
+release channel CHN6;
+release channel CHN7;
+release channel CHN8;
+}
+
+********** file count **************
+
+per sub directory
+du -a | cut -d/ -f2 | sort | uniq -c | sort -nr
+
+********** Slip ******************
+
+Intranet: https://people.bny.net/payroll-india
+Internet: https://hr.bnymellon.com/payroll-india
+
+********** fidelity **************
+
+https://nb.fidelity.com/public/nb/worldwide/logout
+amitkhaladkar
+
+************ unindexed foreign keys ***********
+
+SELECT * FROM (
+SELECT c.table_name, cc.column_name, cc.position column_position
+FROM   user_constraints c, user_cons_columns cc
+WHERE  c.constraint_name = cc.constraint_name
+AND    c.constraint_type = 'R'
+MINUS
+SELECT i.table_name, ic.column_name, ic.column_position
+FROM   user_indexes i, user_ind_columns ic
+WHERE  i.index_name = ic.index_name
+)
+ORDER BY table_name, column_position;
+
+******************* Windows Settings God Mode ********************************
+
+Create a folder and name it GodMode.{ED7BA470-8E54-465E-825C-99712043E01C}
+
+********************************************************** ls -ltr show milliseconds *************************
+
+ls -l --time-style=full-iso
+
+**************** dashboards *****************************************
+https://eagleinvsys.atlassian.net/jira/software/c/projects/PPL/boards/1010?selectedIssue=PPL-125
+
+Perflab
+https://eagleinvsys.atlassian.net/jira/software/c/projects/PRF/boards/542?assignee=557058%3A3e5a7f97-eb1a-492e-b290-5d7631940700
+
+ALTER SYSTEM SET RESOURCE_MANAGER_PLAN = 'long_running_query' scope=both;
+
+************* load profile *******
+
+WITH snap_list AS
+(SELECT db.name db_name,
+snap.snap_id,
+snap.dbid,
+snap.instance_number,
+snap.begin_interval_time,
+trunc((to_number(to_char(snap.begin_interval_time, 'HH24')))/6) myhour,
+EXTRACT (DAY FROM (snap.end_interval_time - snap.begin_interval_time))*24*60*60+ EXTRACT (HOUR FROM (snap.end_interval_time - snap.begin_interval_time))*60*60+ EXTRACT (MINUTE FROM (snap.end_interval_time - snap.begin_interval_time))*60+ EXTRACT (SECOND FROM (snap.end_interval_time - snap.begin_interval_time)) DELTA
+FROM dba_hist_snapshot snap,
+v$database db
+WHERE snap.snap_id IN
+(SELECT snap_id
+FROM dba_hist_snapshot
+WHERE BEGIN_INTERVAL_TIME >= to_date('06/29/2021', 'MM/DD/YYYY') and BEGIN_INTERVAL_TIME < to_date('07/02/2021', 'MM/DD/YYYY')
+)
+AND snap.dbid = db.dbid
+),
+myfinal as (SELECT t0.instance_name, 
+t1.myhour, 
+t2.metric_name, 
+round(max(t2.maxval)) maxmax, 
+round(avg(t2.maxval)) avgmax, 
+round(median(t2.maxval)) medmax, 
+round(max(t2.average)) maxavg,
+round(avg(t2.average)) avgavg,
+round(median(t2.average)) medavg,
+count(*) cnt
+FROM v$instance t0, snap_list t1, DBA_HIST_SYSMETRIC_SUMMARY t2
+  WHERE t0.instance_number = t1.instance_number
+  and t1.dbid = t2.dbid 
+  and t1.instance_number = t2.instance_number
+  and t1.snap_id = t2.snap_id
+and t2.metric_name in ('Host CPU Utilization (%)', 'User Transaction Per Sec', 'Physical Read Bytes Per Sec', 
+'Physical Write Bytes Per Sec', 'Redo Generated Per Sec',
+'Host CPU Usage Per Sec', 'CPU Usage Per Sec', 'Host CPU Utilization (%)')
+group by t0.instance_name, t1.myhour, t2.metric_name)
+
+******** oracle patch version **********
+
+select * from registry$sqlpatch where action='APPLY' order by action_time desc
+
+
+*********** drop baselines ***********
+
+declare
+  l_cnt  pls_integer;
+begin
+  for i in ( select distinct plan_name from dba_sql_plan_baselines )
+  loop
+    l_cnt := 
+        dbms_spm.drop_sql_plan_baseline (
+            sql_handle => null,
+            plan_name  => i.plan_name);
+    
+  end loop;  
+end;
+/
+
+************* check python packages *************
+
+import pkg_resources
+ 
+installed_packages = pkg_resources.working_set
+for package in installed_packages:
+    print(f"{package.key}=={package.version}")
+	
+************ grafana *******************
+
+https://pghgrafana01.eagleinvsys.com:8080/login
+
+******** change sga pga ************
+
+https://oracle-base.com/articles/linux/configuring-huge-pages-for-oracle-on-linux-64
+
+Disable THP and Defrag Permanently 
+
+1.	vi /etc/default/grub
+
+2.	Add “transparent_hugepage=never” to GRUB_CMDLINE_LINUX parameter as shown below
+
+Example ---- GRUB_CMDLINE_LINUX="loglevel=3 crashkernel=auto console=tty1 console=ttyS0 earlyprintk=ttyS0 rootdelay=300 nvme_core.io_timeout=240 transparent_hugepage=never"
+
+3.	sudo grub2-mkconfig -o /boot/efi/EFI/redhat/grub.cfg
+
+4.	Reboot the Server
+
+5.	Check if it got disabled. Below output should show “never”
+
+cat /sys/kernel/mm/transparent_hugepage/enabled
+cat /sys/kernel/mm/transparent_hugepage/defrag
+
+6. Set Oracle parameter - use_large_pages=ONLY
+
+--- calculate hugepages ------
+
+#!/bin/bash
+
+# Set your SGA target in GB
+SGA_GB=48
+
+# Convert to KB (SGA_GB × 1024 × 1024)
+SGA_KB=$((SGA_GB * 1024 * 1024))
+
+# Get HugePage size from the system (usually 2048 KB = 2 MB)
+HP_SIZE_KB=$(grep Hugepagesize /proc/meminfo | awk '{print $2}')
+
+# Calculate required HugePages count
+REQUIRED_HUGEPAGES=$((SGA_KB / HP_SIZE_KB))
+
+# Calculate reserved memory in GB
+RESERVED_GB=$(echo "$REQUIRED_HUGEPAGES * $HP_SIZE_KB / 1024 / 1024" | bc)
+
+echo "=== HugePages Calculation ==="
+echo "SGA Size            : ${SGA_GB} GB"
+echo "HugePage Size       : ${HP_SIZE_KB} KB"
+echo "Required HugePages  : ${REQUIRED_HUGEPAGES}"
+echo "Memory Reserved     : ${RESERVED_GB} GB"
+
+-- Set hugepages --
+
+sudo sysctl -w vm.nr_hugepages=24600
+
+*****************************
+
+for i in `find . -name "*.zip"`; do unzip -a $i; done && find . -name "*.sh" -exec chmod +x '{}' \; && find . -name "*.sh" -exec dos2unix '{}' \; find EAGLE_PATCH -name eaglepatch.ini | xargs sed -i 's/SkipBackup=0/SkipBackup=1/g'
+
+for i in {49..55}; do sed -i 's/INSTDIR_EMShell=\~/INSTDIR_EMShell=\/apps/g' 2017.2.$i/EAGLE_PATCH/eaglepatch.ini; done
+for i in {49..55}; do sed -i 's/SilentMode=0/SilentMode=1/g' 2017.2.$i/EAGLE_PATCH/eaglepatch.ini; done
+for i in {49..55}; do sed -i 's/SkipBackup=0/SkipBackup=1/g' 2017.2.$i/EAGLE_PATCH/eaglepatch.ini; done
+
+******** equinix server *********
+
+PPLD5008
+
+********** confluence links ****************
+
+Oracle
+https://eagleinvsys.atlassian.net/wiki/spaces/DATABASE/pages/18962522/Oracle
+
+********** iops requirement ***********
+
+WITH snapshots AS (
+    SELECT 
+        SNAP_ID,
+        BEGIN_INTERVAL_TIME AS BEGIN_TIME,
+        END_INTERVAL_TIME AS END_TIME,
+        LAG(VALUE) OVER (PARTITION BY STAT_NAME ORDER BY SNAP_ID) AS BEGIN_VAL,
+        VALUE AS END_VAL,
+        STAT_NAME
+    FROM DBA_HIST_SYSSTAT 
+    JOIN DBA_HIST_SNAPSHOT USING (DBID, INSTANCE_NUMBER, SNAP_ID)
+    WHERE STAT_NAME IN ('physical read total IO requests', 'physical write total IO requests')
+    AND BEGIN_INTERVAL_TIME >= SYSDATE - 1
+)
+SELECT 
+    TO_CHAR(BEGIN_TIME, 'YYYY-MM-DD HH24:MI') AS "Time",
+    ROUND(NVL((CASE 
+        WHEN (EXTRACT(SECOND FROM (END_TIME - BEGIN_TIME)) +
+               EXTRACT(MINUTE FROM (END_TIME - BEGIN_TIME)) * 60 +
+               EXTRACT(HOUR FROM (END_TIME - BEGIN_TIME)) * 3600) > 0 
+        THEN (END_VAL - BEGIN_VAL) / 
+             (EXTRACT(SECOND FROM (END_TIME - BEGIN_TIME)) +
+              EXTRACT(MINUTE FROM (END_TIME - BEGIN_TIME)) * 60 +
+              EXTRACT(HOUR FROM (END_TIME - BEGIN_TIME)) * 3600) 
+        ELSE 0 END), 2), 2) AS "IOPS"
+FROM snapshots
+WHERE BEGIN_VAL IS NOT NULL
+ORDER BY BEGIN_TIME;
+
+************************* Table statistics *******************
+
+select sq.snap_id ""SNAP ID"", 
+       trunc(sn.begin_interval_time, 'MI') ""BEGIN TIME"", 
+       trunc(sn.end_interval_time, 'MI') ""END TIME"",
+       sq.sql_id ""SQL ID"", 
+       substr(st.sql_text,1,2000) ""SQL TEXT"", 
+       round(sq.cpu_time_delta/1000000,6) ""TOTAL CPU"", 
+       round(sq.elapsed_time_delta/1000000,6) ""TOTAL ELAPSED"",  
+       round(sq.cpu_time_delta/(1000000*sq.executions_delta),6) ""AVG CPU"", 
+       round(sq.elapsed_time_delta/(1000000*sq.executions_delta),6) ""AVG ELAPSED"", 
+       sq.executions_delta ""EXEC TIMES"",
+       round(sq.buffer_gets_delta/sq.executions_delta,6) ""AVG BUFFER GETS"", 
+       round(sq.rows_processed_delta/sq.executions_delta,6) ""AVG ROWS PROC"",
+       round(sq.disk_reads_delta/sq.executions_delta,6) ""AVG DISK READS"",
+       round(sq.apwait_delta/(1000000*sq.executions_delta),6) ""AVG APP WAIT"",
+       round(sq.ccwait_delta/(1000000*sq.executions_delta),6) ""AVG CONCURRENT WAIT"",
+       round(sq.clwait_delta/(1000000*sq.executions_delta),6) ""AVG CLUSTER WAIT"",
+       round(sq.iowait_delta/(1000000*sq.executions_delta),6) ""AVG USER IO WAIT"",
+       sq.loads_delta ""LOADS"", 
+       sq.sorts_delta ""SORTS"", 
+       sq.PLAN_HASH_VALUE ""PLAN HASH VALUE"", 
+       sq.LOADS_TOTAL ""LOADS TOTAL""
+  from dba_hist_sqlstat sq, dba_hist_sqltext st, dba_hist_snapshot sn
+where sq.sql_id = st.sql_id and sq.dbid = st.dbid and sq.executions_delta <> 0 and 
+       ( (upper(substr(st.sql_text,1,2000))) like '%ESTAR_LEDGER_BALANCE%' ) and 
+       sq.snap_id = sn.snap_id and sq.dbid = sn.dbid and sq.instance_number = sn.instance_number
+   and sq.instance_number = 1
+order by sq.snap_id asc, sq.elapsed_time_delta  desc
+
+************* Clear SBT_TAPE configs *************
+
+CONFIGURE DEFAULT DEVICE TYPE CLEAR;
+CONFIGURE CHANNEL DEVICE TYPE DISK CLEAR;
+CONFIGURE CONTROLFILE AUTOBACKUP FORMAT FOR DEVICE TYPE DISK CLEAR;
+CONFIGURE DEVICE TYPE DISK PARALLELISM CLEAR;
+
+*************** ACtive SQLs ***************
+
+SELECT s.sid, s.serial#, s.username, s.osuser, s.program, s.status, s.sql_id, q.sql_text
+FROM v$session s
+JOIN v$sql q ON s.sql_id = q.sql_id
+WHERE s.status = 'ACTIVE';
+
+************ storage size *****************
+
+SELECT
+    (SELECT SUM(bytes) / 1024 / 1024 / 1024 AS data_size FROM dba_data_files) +
+    (SELECT NVL(SUM(bytes), 0) / 1024 / 1024 / 1024 AS temp_size FROM dba_temp_files) +
+    (SELECT SUM(bytes) / 1024 / 1024 / 1024 AS redo_size FROM sys.v_$log) +
+    (SELECT SUM(BLOCK_SIZE * FILE_SIZE_BLKS) / 1024 / 1024 / 1024 AS controlfile_size FROM v$controlfile) "Size in GB"
+FROM dual;
+
+************* AVS PIM login *******************
+
+https://portal.azure.com/#view/Microsoft_Azure_PIMCommon/ActivationMenuBlade/~/aadgroup
+
+******** clear SBT_TAPE **********
+
+CONFIGURE DEVICE TYPE 'SBT_TAPE' clear;
+
+******** Recompile **************
+
+execute UTL_RECOMP.recomp_parallel(24);
+
+********* databricks **********
+
+https://customer-academy.databricks.com/learn/learning-plans/160/apache-spark-developer-learning-plan/courses/1211/introduction-to-python-for-data-science-and-data-engineering/lessons
+
+https://dbc-c28a6686-368e.cloud.databricks.com/?autoLogin=true&account_id=342b7156-6156-4785-8725-572a4508d89d&o=7474649108889313
+
+******** current patches applied *************
+
+opatch lsinventory | grep -E "(^Patch.*applied)|(^Sub-patch)"
+
+******** Unlimited profile *****************
+
+alter profile DEFAULT limit PASSWORD_REUSE_TIME unlimited;
+alter profile DEFAULT limit PASSWORD_LIFE_TIME  unlimited;
+
+
+*********** hidden parameters **************
+
+SELECT a.ksppinm "Parameter", b.KSPPSTDF "Default Value",
+       b.ksppstvl "Session Value", 
+       c.ksppstvl "Instance Value",
+       decode(bitand(a.ksppiflg/256,1),1,'TRUE','FALSE') IS_SESSION_MODIFIABLE,
+       decode(bitand(a.ksppiflg/65536,3),1,'IMMEDIATE',2,'DEFERRED',3,'IMMEDIATE','FALSE') IS_SYSTEM_MODIFIABLE
+FROM   x$ksppi a,
+       x$ksppcv b,
+       x$ksppsv c
+WHERE  a.indx = b.indx
+AND    a.indx = c.indx
+AND    a.ksppinm LIKE '/_%' escape '/'
+and    a.ksppinm='_serial_direct_read'
+
+********** ASCII code in tables *************
+
+SELECT SHORT_DESC, ASCIISTR(SHORT_DESC), cv2.*  FROM PACE_MASTERDBO.CODE_VALUES cv2  WHERE CV2.SHORT_DESC != ASCIISTR(CV2.SHORT_DESC)
+
+SELECT LONG_DESC, ASCIISTR(LONG_DESC), cv2.*  FROM PACE_MASTERDBO.CODE_VALUES cv2  WHERE CV2.LONG_DESC != ASCIISTR(CV2.LONG_DESC)
+
+Below update fixed most of those except two rows ..
+
+UPDATE PACE_MASTERDBO.CODE_VALUES cv2
+   SET cv2.long_desc = REGEXP_REPLACE(cv2.long_desc, '[^[:alnum:] ]', ' ')
+WHERE REGEXP_LIKE (cv2.long_desc, '.*[^[:alnum:]].*')
+
+************* ditl fix *******************
+
+--waiting events
+delete pace_masterdbo.egl_sched_def_details
+where sq_instance > 0 and effective_date < trunc(sysdate);
+commit;
+
+update pace_masterdbo.egl_sched_queue 
+set status = 2, update_date = sysdate
+where status = 1 and effective_date < trunc(sysdate);
+commit;
+
+
+
+*********** oracle patch *************
+
+SELECT action_time, action, version, id, comments 
+  FROM dba_registry_history 
+ ORDER BY action_time;
+
+******** kill all eagle processes *********
+
+ps -ef | grep eagle | grep app | tr -s " " | cut -d' ' -f2 | grep -v kill | awk '{print "kill -9 "$1}' | sh
+
+ps -ef | grep setup.sh | tr -s " " | cut -d' ' -f2 | grep -v kill | awk '{print "kill -9 "$1}' | sh
+
+********* bny azure ***********
+
+https://portal.azure.com/
+
+************* size and modified date of current folder files ************
+
+#!/bin/bash
+find . -type f | while read line; do
+#count=`find "${line}" -maxdepth 1 -type f | wc -l`
+fsize=`du -sh "${line}" > temp; awk '{print $(NF-1), $NF;}' temp | cut -d' ' -f1`
+mdate=`date -r "${line}" "+%m-%d-%Y-%H:%M:%S"`
+echo $line","$fsize","$mdate >> dynamic_file_details.csv
+#echo $line","${count} >> dynamic_file_count.csv
+done
+
+***************** Commands in parallel *********************
+
+# Login as sys and create necessary directory
+# In the below code change the value 4 in three places to the number of parallel process you wish to execute
+# After making sure the above things,please uncomment the below lines only and save the shell
+# compress ctrl_file <command part to filter> <degree of paralellism>
+ctrl_file=$1
+command=$2
+degree=$3
+date
+let impdpctr=0
+cat ${ctrl_file} | while read impdplyne ; do
+  echo "Processing  impdplyne : $impdplyne"
+ $impdplyne &
+  let impdpctr=impdpctr+1
+  echo "Number of ${command} process currently running, impdpctr = $impdpctr"
+  if [ "${impdpctr}" = "${degree}" ] ; then
+    while true ; do
+      echo "Number of ${command} process currently running = `ps -ef | grep ${command} | grep -v grep | wc -l`"
+      lcn=`ps -ef | grep ${command} | grep -v grep | wc -l`
+      lcnt="`echo ${lcn}`"
+      if [ "${lcnt}" = "${degree}" ] ; then
+        sleep 5
+      elif [ "${lcnt}" -lt "${degree}" ] ; then
+        let impdpctr=${lcnt}
+        break
+      fi
+    done
+  fi
+done
+date
+
+************************************
+
+MyNav - https://avjw.accelerate.accenture.com/Execution/MyTasks/Index?tab=Respond
+
+*****************************
+
+******** BTC Electrum wallet ***********
+
+cream knife party despair reuniun sure scene gain solve hungry soccer hope
+
+http://indianews.newsweaver.com/hrupdates/18yhvcrek4e1hdqg9upx5t/external?email=true&a=6&p=417961&t=163585
+
+**************************************************************
+
+	
+
+UAN - 100557461816 
+
+**************** SQLPLUS ************************
+
+SET ECHO OFF NEWP 0 SPA 0 PAGES 0 FEED OFF HEAD OFF TRIMS ON TAB OFF LINESIZE 2000
+SET ECHO OFF NEWP 0 SPA 0 PAGES 0 FEED OFF HEAD OFF TRIMS ON TAB OFF
+SET LONG 20000 LONGCHUNKSIZE 20000 PAGESIZE 0 LINESIZE 1000 FEEDBACK OFF VERIFY OFF TRIMSPOOL ON TERMOUT OFF
+
+********** sar report ***********
+
+memory (for 6th date of the month) : sar -r -f /var/log/sa/sa06
+cpu  (for 6th date of the month) : sar -u -f /var/log/sa/sa06
+
+************ Eagle config list ********
+https://eaglejive.eagleinvsys.com/groups/upgrade-system-health/blog/2019/08/07/eagle-configurations-dictionary
+
+*********** flasback completion ************
+
+select opname,round(sofar/totalwork*100)||'%' complete,start_time,(sysdate+time_remaining/86400) predicted_finish from v$session_longops where time_remaining > 0;
+
+############### Long Forms ##############################
+
+DITL - Day In The Life
+FAST - Fund Accounting Scalability Test
+EARTH - Eagle Automated Regression Testing Hub
+SMART - Star Mutual Fund Accounting Regression Tool
+FARM - Fully Automated Regression Methodology
+STAR - Straight-Through Accounting and Reconciliation
+PACE - Portfolio Analytic Concentration Engine
+PTPLUS - Partnership Accounting and Tax Processing
+EJM - Eagle Job Management
+AEW - Automated Event Wrapper
+TPE - Transaction Processing Engine Server
+
+********** delete files from incoming and proessing ***********
+
+find . \( -name "processing" -o -name "incoming" \) -type d | awk '{print "find "$1" -type f"}' | sh | xargs rm -f
+
+********** EA group manage ************
+
+https://myeaglead.eagleinvsys.com/myeaglead
+
+*************** Latest Patch ******************
+
+756671.1
+
+************* stress test ********************
+
+https://medium.com/primaadi/stress-test-cpu-and-memory-in-linux-d17bfa5e8887
+
+************* remove SBT_TAPE ***************
+CONFIGURE CHANNEL DEVICE TYPE 'SBT_TAPE' CLEAR;
+CONFIGURE DEVICE TYPE 'SBT_TAPE' CLEAR;
+CONFIGURE CONTROLFILE AUTOBACKUP FORMAT FOR DEVICE TYPE 'SBT_TAPE' clear;
+
+************ rename files ************
+https://oracle-base.com/articles/misc/renaming-or-moving-oracle-files#manual
+
+*********** R2.22 password encryption ****************
+
+eaglel@!7
+
+0-48488cb8f1039f6e6eb56bd2b50ce6d5-a8f03bbd98b15818e634ecd0fefd2d628bb87e1e3b4bbd5b734d3e5a71ee25e71c1b1d9bd3a3d1caa3bb36785b6a9d44eb94b1915d36e35928e79e599e99db36b9acc4ec94b015976fe36848065e76b5fc1f147bb00ec347a219d813fd19a99be4dae7e2
+
+*********** sys password encryption *****************
+
+#!/bin/bash
+
+echo -n "ENTER USERNAME: "; stty -echo; read uname; stty echo; echo 
+
+echo -n "ENTER PASSWORD: "; stty -echo; read passwd; stty echo; echo 
+
+echo -n "ENTER KEY: "; stty -echo; read key; stty echo; echo 
+
+rm syspasswd 2> /dev/null
+echo $uname | openssl enc -aes-128-cbc -a -salt -pass pass:$key >> syspasswd
+echo $passwd | openssl enc -aes-128-cbc -a -salt -pass pass:$key >> syspasswd
+
+********* check user process numbers **********
+
+ps h -Led -o user | sort | uniq -c | sort -n
+
+**************** Tablespace *************
+
+SELECT DISTINCT sgm.TABLESPACE_NAME , dtf.FILE_NAME
+FROM DBA_SEGMENTS sgm
+JOIN DBA_DATA_FILES dtf ON (sgm.TABLESPACE_NAME = dtf.TABLESPACE_NAME)
+WHERE sgm.OWNER = 'EAGLEMGR'
+
+************* source ***************
+
+select text
+  from dba_source
+where name = 'TEST_VALIDATE_AI0187' 
+   and type = 'PROCEDURE'
+   and owner = 'SCRUBDBO'
+order by line;
+
+select *
+  from dba_errors
+where name = 'TEST_VALIDATE_AI0187'
+   and type = 'PROCEDURE'
+   and owner = 'SCRUBDBO';
+
+select text
+  from dba_source
+where name = 'ALLSTATE_NEW_PKG' 
+   and type = 'PACKAGE'
+   and owner = 'PACE_MASTERDBO'
+order by line;
+
+select *
+  from dba_errors
+where name = 'ALLSTATE_NEW_PKG'
+   and type = 'PACKAGE'
+   and owner = 'PACE_MASTERDBO';
+   
+select text
+  from dba_source
+where name = 'ALLSTATE_NEW_PKG' 
+   and type = 'PACKAGE BODY'
+   and owner = 'PACE_MASTERDBO'
+order by line;
+
+select *
+  from dba_errors
+where name = 'ALLSTATE_NEW_PKG'
+   and type = 'PACKAGE BODY'
+   and owner = 'PACE_MASTERDBO';
+   
+************* grants for a user ****************
+
+grant connect to estar_service
+grant create cluster to estar_service
+grant create indextype to estar_service
+grant create job to estar_service
+grant create operator to estar_service
+grant create procedure to estar_service
+grant create public synonym to estar_service
+grant create sequence to estar_service
+grant create session to estar_service
+grant create synonym to estar_service
+grant create table to estar_service
+grant create trigger to estar_service
+grant create type to estar_service
+grant create view to estar_service
+grant query rewrite to estar_service
+grant resource to estar_service
+grant select any dictionary to estar_service
+
+************* SPM ***************************
+
+https://support.oracle.com/epmos/faces/DocumentDisplay?_afrLoop=460336009259630&parent=EXTERNAL_SEARCH&sourceId=BULLETIN&id=2943661.1&_afrWindowMode=0&_adf.ctrl-state=10jd7bopnx_53
+https://support.oracle.com/epmos/faces/DocumentDisplay?_afrLoop=461430452093079&id=880485.1&_afrWindowMode=0&_adf.ctrl-state=10jd7bopnx_102
+   
+*************** last accounting date **************
+
+select max(cp.last_acct_dt) from estar.estar_cost_position cp
+
+************** clear device type *************
+
+CONFIGURE DEVICE TYPE 'SBT_TAPE' clear;
+
+************ remove snap_id *****************
+
+select dbid, snap_id from dba_hist_snapshot order by snap_id desc
+select * from 	dba_hist_wr_control
+select dbid,min(snap_id),max(snap_id) from dba_hist_snapshot group by dbid
+exec dbms_workload_repository.drop_snapshot_range(3439,3442,437728801)
+exec dbms_swrf_internal.unregister_database(437728801)
+
+exec DBMS_WORKLOAD_REPOSITORY.modify_snapshot_settings(retention => 64800, interval => 99999, topnsql => 100);
+
+BEGIN
+   DBMS_WORKLOAD_REPOSITORY.MODIFY_SNAPSHOT_SETTINGS(
+      interval => 15,   -- Interval in minutes
+      retention => 64800  -- Retention in minutes (45 days = 45 * 24 * 60)
+   );
+END;
+/
+
+********************* get dll ************************
+
+http://tech.padipa.net/generating-create-scripts-through-dbms_metadata-package
+
+******************************************************
+
+	-- in 
+
+**************** sql compare ***************
+
+select sql_text1, sql_text2 from table(sql_compare_fn('ditl_pwt2_2017R219_Ora193_d01','pwt2_R219_O196_d02'))
+
+*************** oracle download ************************
+
+
+https://edelivery.oracle.com/osdc/faces/SoftwareDelivery
+
+*********** whay killed a process *****************
+
+dmesg -T| grep -E -i -B2 'killed process'
+
+B100 number of line before kill
+
+############## PARAMETER Change from Backend #######################
+
+update pace_masterdbo.dbo.pace_system set sys_value='Johnston v12.1 TEST Satement' where sys_item='105'
+update pace_masterdbo.dbo.pace_system set sys_value='E:\Program Files (x86)\Eagle Investment Systems\PACE\Server\ADV_RPT' where sys_item='86'
+update pace_masterdbo.dbo.pace_system set sys_value='\\swbtst2-a02\nfs\pacedata' where sys_item='9'
+update pace_masterdbo.pace_system set sys_value='1' where sys_item='239'
+update pace_masterdbo.dbo.custom_archive_rules set root_dir='/apps/ajamtst2/nfs/reports' where instance='1'
+update pace_masterdbo.dbo.custom_archive_rules set root_dir='/apps/ajamtst2/nfs/reports' where instance='2'
+insert into estar.web_configuration values('SYNC_SEND_TIMEOUT','BATCH',3600,NULL,NULL,NULL,SYSDATE)
+insert into estar.web_configuration values('SYNC_SEND_TIMEOUT','TRAN',3600,NULL,NULL,NULL,SYSDATE)
+
+update estar.dbo.web_configuration set int_value='3600' where attribute2='BATCH'
+update estar.dbo.web_configuration set int_value='3600' where attribute2='TRAN'
+update estar.dbo.web_configuration set char_value='10.70.13.244' where attribute='LB_CFG_SMTP_SERVER_NAME'
+update estar.dbo.web_configuration set char_value='team_install@eagleaccess.com' where attribute='LB_CFG_ALERT_EMAIL_LIST'
+update estar.dbo.web_configuration set char_value='00.000000' where attribute='LB_CFG_GROUP_CHANGE_MIN_LOAD'
+update estar.dbo.web_configuration set char_value='00.000000' where attribute='LB_CFG_GROUP_CHANGE_MAX_LOAD'
+
+***************** Oracle 11g silent installer ***********************************
+
+/home/oracle/amit/database/runInstaller -responseFile /home/oracle/amit/db_install_11204.rsp exit
+
+###################### SQL SERVER Load Balancer ########################
+
+INSERT INTO WEB_CONFIGURATION
+(UPDATE_TIME, STATUS, INT_VALUE, CLOB_VALUE, CHAR_VALUE, ATTRIBUTE2, ATTRIBUTE)
+VALUES (GETDATE(),  NULL, 3600,
+NULL, NULL,
+'BATCH', 'SYNC_SEND_TIMEOUT');
+
+INSERT INTO WEB_CONFIGURATION
+(UPDATE_TIME, STATUS, INT_VALUE, CLOB_VALUE, CHAR_VALUE, ATTRIBUTE2, ATTRIBUTE)
+VALUES (GETDATE(),  NULL, 3600,
+NULL, NULL,
+'TRAN', 'SYNC_SEND_TIMEOUT');
+
+Soft Links--------------------------------------------------------------------------------
+
+Dynamic
+
+1. move dynamic folder from /apps/apnetst1/estar/tpe
+2. ln -s /apps/apnetst1/nfs/dynamic .
+
+Msgcenter
+
+1. delete the msgcenter folder from /apps/apnetst1/estar/tpe/data
+2. ln -s /apps/apnetst1/nfs/mcdata msgcenter
+
+DIRECTORY CREATION-------------------------------------------------------------------------
+
+1. /apps/apnetst1/nfs/dynamic/dat/ 
+
+	i. create a directory i.e. pune_test
+	ii. copy the contents of eagle/ into pune_test
+
+-------------------------------------------------------------------------------------------
+
+************** grant awr ***********
+grant advisor to pace_masterdbo;
+grant execute on dbms_workload_repository to pace_masterdbo;
+grant select any dictionary to pace_masterdbo;
+GRANT SELECT ON SYS.V_$DATABASE TO pace_masterdbo;
+GRANT SELECT ON SYS.V_$INSTANCE TO pace_masterdbo;
+GRANT EXECUTE ON SYS.DBMS_WORKLOAD_REPOSITORY TO pace_masterdbo;
+GRANT SELECT ON SYS.DBA_HIST_DATABASE_INSTANCE TO pace_masterdbo;
+GRANT SELECT ON SYS.DBA_HIST_SNAPSHOT TO pace_masterdbo;
+
+************** obsolete parameters *************
+
+select p.name,p.value from v$parameter p, v$spparameter s where s.name=p.name and p.isdeprecated='TRUE' and s.isspecified='TRUE';  
+
+*************** table space ************
+
+SELECT owner,
+segment_name,
+segment_type,
+tablespace_name,
+bytes/1024/1024/1024 GB,
+initial_extent,
+next_extent,
+extents,
+pct_increase
+FROM
+DBA_SEGMENTS
+where segment_name like 'CRISP%'
+order by bytes desc
+
+****************** Active sessions ******************
+
+SELECT O.OBJECT_NAME, S.SID, S.SERIAL#, P.SPID, S.PROGRAM,S.USERNAME,
+S.MACHINE,S.PORT , S.LOGON_TIME,SQ.SQL_FULLTEXT 
+FROM V$LOCKED_OBJECT L, DBA_OBJECTS O, V$SESSION S, 
+V$PROCESS P, V$SQL SQ 
+WHERE L.OBJECT_ID = O.OBJECT_ID 
+AND L.SESSION_ID = S.SID AND S.PADDR = P.ADDR 
+AND S.SQL_ADDRESS = SQ.ADDRESS;
+
+***************** Kill all sessions of a user in oracle ********************
+
+BEGIN
+  FOR r IN (select sid,serial# from v$session where username = 'USER')
+  LOOP
+    EXECUTE IMMEDIATE 'alter system kill session ''' || r.sid 
+      || ',' || r.serial# || '''';
+  END LOOP;
+END;
+
+******************* install xml Db ***********
+
+http://www.oracle-wiki.net/startdocshowtoinstallxmldb
+
+******************** table and index ddl *****************
+
+select dbms_metadata.get_ddl('TABLE','DEPT','SCOTT') from dual;
+ 
+select dbms_metadata.get_ddl('INDEX','DEPT_IDX','SCOTT') from dual;
+
+********************* DEGREE *******************
+
+INDEX :
+
+select owner, index_name, degree from dba_indexes where degree > 1 and owner not in ('SYS', 'SYSTEM', 'WMSYS', 'DRSYS','OUTLN', 'DBSNMP', 'XDB', 
+'ORDSYS','CTXSYS', 'ORDPLUGINS', 'MDSYS','XS$NULL','APEX_PUBLIC_USER','SPATIAL_CSW_ADMIN_USR','ORACLE_OCM','MDDATA',
+'DIP','SPATIAL_WFS_ADMIN_USR','FLOWS_FILES','ORDDATA','SI_INFORMTN_SCHEMA','EXFSYS','APPQOSSYS','APEX_030200','OWBSYS_AUDIT',
+'OWBSYS','OLAPSYS','ANONYMOUS','MGMT_VIEW','SYSMAN')
+
+TABLES :
+
+select owner,table_name,degree from dba_tables where ltrim(degree) not in ('1','DEFAULT') and owner not in ('SYS', 'SYSTEM', 'WMSYS', 'DRSYS','OUTLN', 'DBSNMP', 'XDB', 
+'ORDSYS','CTXSYS', 'ORDPLUGINS', 'MDSYS','XS$NULL','APEX_PUBLIC_USER','SPATIAL_CSW_ADMIN_USR','ORACLE_OCM','MDDATA',
+'DIP','SPATIAL_WFS_ADMIN_USR','FLOWS_FILES','ORDDATA','SI_INFORMTN_SCHEMA','EXFSYS','APPQOSSYS','APEX_030200','OWBSYS_AUDIT',
+'OWBSYS','OLAPSYS','ANONYMOUS','MGMT_VIEW','SYSMAN')
+
+*********** remove duplicates from file **********
+
+awk '!a[$0]++' file
+
+**************** oracle logminer **********************
+
+https://grepora.com/2020/05/13/19c-could-not-execute-dbms_logmnr-start_logmnr-ora-44609-continous_mine-is-desupported-for-use-with-dbms_logmnr-start_logmnr/
+
+https://support.oracle.com/epmos/faces/DocumentDisplay?_afrLoop=426039967921801&parent=EXTERNAL_SEARCH&sourceId=PROBLEM&id=1676045.1&_afrWindowMode=0&_adf.ctrl-state=q7t920aqm_4
+
+************
+
+foodbook - 79838
+
+***************************
+
+root access to run patch
+Scripts
+account - oracle
+/u01/app/oracle/product/19.3.0.0/db/root.sh
+
+account - grid
+/u01/app/grid/product/19.3.0.0/grid/OPatch/opatchauto
+/u01/app/grid/product/19.3.0.0/grid/rootupgrade.sh
+/u01/app/grid/product/19.3.0.0/grid/crs/install/roothas.sh
+/u01/app/grid/product/19.3.0.0/grid/bin/crsctl
+
+**************** common password ********************
+
+original password script -----------------------
+
+select 'alter user '||u.username||' identified by values '''||s.spare4||''' account unlock;' cmd
+ from dba_users u
+ join sys.user$ s
+ on u.user_id = s.user#
+ where u.username in ('TRADESDBO','EAGLEMGR','SECURITYDBO','EAGLEKB',
+'RULESDBO','CTRLCTR','DATAEXCHDBO','HOLDINGDBO','PACE_MASTERDBO','CASHDBO','MSGCENTER_DBO','ESTAR','PERFORMDBO',
+'LEDGERDBO','SCRUBDBO','ISTAR','ARCH_CTRLCTR','EAGLE_TEMP','SYS','SYSTEM','ETK_USER','EDMDBO','PROD_PARALLELDBO','EAGLE_ADMIN_USER') 
+OR username in (SELECT CURRENT_PHYSICAL_PARTITION
+FROM estar.star_partition
+WHERE LOGICAL_PARTITION_ID != 1)
+OR username in (select username from dba_users where username like '%MART%')
+
+**************** Work applied **********************
+
+https://nvidia.wd5.myworkdayjobs.com/en-US/NVIDIAExternalCareerSite/userHome
+
+common pasword -------------------------
+
+select 'alter user ' || username || ' identified by Eagle#123 account unlock;' from
+(select username from dba_users where username in ('TRADESDBO','EAGLEMGR','SECURITYDBO','EAGLEKB',
+'RULESDBO','CTRLCTR','DATAEXCHDBO','HOLDINGDBO','PACE_MASTERDBO','CASHDBO','MSGCENTER_DBO','ESTAR','PERFORMDBO',
+'LEDGERDBO','SCRUBDBO','ISTAR','ARCH_CTRLCTR','EAGLE_TEMP','SYS','SYSTEM','ETK_USER','EDMDBO','PROD_PARALLELDBO','EAGLE_ADMIN_USER') 
+OR username in (SELECT CURRENT_PHYSICAL_PARTITION
+FROM estar.star_partition
+WHERE LOGICAL_PARTITION_ID != 1)
+OR username in (select username from dba_users where username like '%MART%'))
+
+********
+
+for i in {31..45}; do mkdir 2017.2.$i && cp -r /media/eagle/2017/Eagle_2017R2.$i/EAGLE_APPLICATIONS/EAGLE_PATCH 2017.2.$i/ ; done
+
+--------------------- Move objects to another tablespace -----------------
+
+BEGIN
+   FOR t IN (SELECT table_name 
+             FROM user_tables 
+             WHERE tablespace_name != 'NEW_TABLESPACE') 
+   LOOP
+      EXECUTE IMMEDIATE 'ALTER TABLE ' || t.table_name || ' MOVE TABLESPACE NEW_TABLESPACE';
+   END LOOP;
+
+   FOR i IN (SELECT index_name 
+             FROM user_indexes 
+             WHERE tablespace_name != 'NEW_TABLESPACE') 
+   LOOP
+      EXECUTE IMMEDIATE 'ALTER INDEX ' || i.index_name || ' REBUILD TABLESPACE NEW_TABLESPACE';
+   END LOOP;
+
+   FOR l IN (SELECT table_name, column_name 
+             FROM user_lobs 
+             WHERE tablespace_name != 'NEW_TABLESPACE') 
+   LOOP
+      EXECUTE IMMEDIATE 'ALTER TABLE ' || l.table_name || ' MOVE LOB (' || l.column_name || ') STORE AS (TABLESPACE NEW_TABLESPACE)';
+   END LOOP;
+END;
+/
+
+-----------------------------------------------------------------
+
+--- disable advisors
+
+EXEC DBMS_AUTO_TASK_ADMIN.DISABLE
+
+----------------------------------
+
+Password unlimited reuse profile--------------
+
+select 'alter profile ' || username || ' limit PASSWORD_REUSE_TIME UNLIMITED;' from
+(select username from dba_users where username in ('TRADESDBO','EAGLEMGR','SECURITYDBO','EAGLEKB',
+'RULESDBO','CTRLCTR','DATAEXCHDBO','HOLDINGDBO','PACE_MASTERDBO','CASHDBO','MSGCENTER_DBO','ESTAR','PERFORMDBO',
+'LEDGERDBO','SCRUBDBO','ISTAR','ARCH_CTRLCTR','EAGLE_TEMP','DATAMARTDBO','EAGLEMART','EAGLE_ADMIN_USER') 
+OR username in (SELECT CURRENT_PHYSICAL_PARTITION
+FROM estar.star_partition
+WHERE LOGICAL_PARTITION_ID != 1))
+
+******** database details ************
+
+SELECT DBMS_METADATA.GET_DDL('USER',username) as script from DBA_USERS where username='&username'
+UNION ALL
+SELECT DBMS_METADATA.GET_GRANTED_DDL('SYSTEM_GRANT',grantee)as script from DBA_SYS_PRIVS where grantee='&username' and rownum=1
+UNION ALL
+SELECT DBMS_METADATA.GET_GRANTED_DDL('ROLE_GRANT',grantee)as script from DBA_ROLE_PRIVS where grantee='&username' and rownum=1
+UNION ALL
+SELECT DBMS_METADATA.GET_GRANTED_DDL('OBJECT_GRANT',grantee)as script from DBA_TAB_PRIVS where grantee='&username' and rownum=1;
+
+
+SELECT  
+case
+when a.contents = 'TEMPORARY' then 'create bigfile temporary tablespace ' || a.tablespace_name || ' tempfile ' || '''+DATA''' || ' size 10M autoextend on next 1G maxsize unlimited;' 
+when a.contents not in ('TEMPORARY') and ROUND(c.BYTES / 1024 / 1024,0) < 10 then 'create bigfile tablespace ' || a.tablespace_name || ' datafile ' || '''+DATA''' || 
+' size 10M autoextend on next 1G maxsize unlimited;'
+else
+'create bigfile tablespace ' || a.tablespace_name || ' datafile ' || '''+DATA''' || 
+' size '|| NVL(ROUND(c.BYTES / 1024 / 1024,0),10) || 'M autoextend on next 1G maxsize unlimited;'
+end
+    FROM dba_tablespaces a,
+       (    SELECT   tablespace_name, 
+                  SUM (BYTES) BYTES
+           FROM   dba_free_space
+       GROUP BY   tablespace_name
+       ) b,
+      (    SELECT   COUNT (1) DATAFILES, 
+                  SUM (BYTES) BYTES, 
+                  tablespace_name
+           FROM   dba_data_files
+       GROUP BY   tablespace_name
+    ) c
+  WHERE b.tablespace_name(+) = a.tablespace_name 
+    AND c.tablespace_name(+) = a.tablespace_name
+    AND a.tablespace_name not in ('SYSAUX','SYSTEM')
+    AND a.tablespace_name not like 'TEMP%'
+    AND a.tablespace_name not like 'UNDO%'
+ORDER BY NVL (((c.BYTES - NVL (b.BYTES, 0)) / c.BYTES), 0) DESC;
+
+
+SELECT
+  CASE
+    WHEN a.contents = 'TEMPORARY'
+    THEN 'create bigfile temporary tablespace '
+      || a.tablespace_name
+      || ' tempfile '
+      || '''/o171-pl01-ld01-01/oradata/prfl001/tempfiles'||a.tablespace_name||'.dbf'' size 10M autoextend on next 1G maxsize unlimited;'
+    WHEN a.contents NOT                  IN ('TEMPORARY')
+    AND ROUND(c.BYTES    / 1024 / 1024,0) < 10
+    THEN 'create bigfile tablespace '
+      || a.tablespace_name
+      || ' datafile '
+      || '''/o171-pl01-ld01-01/oradata/prfl001/tempfiles'||a.tablespace_name||'.dbf'' size 10M autoextend on next 1G maxsize unlimited;'
+    ELSE 'create bigfile tablespace '
+      || a.tablespace_name
+      || ' datafile '
+      || '''/o171-pl01-ld01-01/oradata/prfl001/datafiles'||a.tablespace_name||'.dbf'' size '|| NVL(ROUND(c.BYTES / 1024 / 1024,0),10) || 'M autoextend ON NEXT 1G maxsize unlimited;
+    ' 
+end    
+FROM dba_tablespaces a,       
+(    SELECT   tablespace_name,                   
+SUM (BYTES) BYTES           
+FROM   dba_free_space       
+GROUP BY   tablespace_name       
+) b,      
+(    SELECT   COUNT (1) DATAFILES,                   
+SUM (BYTES) BYTES,                   
+tablespace_name           
+FROM   dba_data_files       
+GROUP BY   tablespace_name    
+) c  
+WHERE b.tablespace_name(+) = a.tablespace_name     
+AND c.tablespace_name(+) = a.tablespace_name    
+AND a.tablespace_name not in ('SYSAUX','SYSTEM')    
+AND a.tablespace_name not like 'TEMP%'    
+AND a.tablespace_name not like 'UNDO%' 
+ORDER BY NVL (((c.BYTES - NVL (b.BYTES, 0)) / c.BYTES), 0) DESC;
+
+
+
+select
+  case
+   when (df.totalspace - fs.freespace) < 10 then 'create bigfile tablespace datafile ''+DATA'' ' || fs.tablespace_name || ' size 10M autoextend on next 100M maxsize unlimited;'
+   else 'create bigfile tablespace datafile ''+DATA'' ' || fs.tablespace_name || ' size ' || (df.totalspace - fs.freespace) || 'M autoextend on next 100M maxsize unlimited;'
+   end
+  from
+   (select
+      tablespace_name,
+      round(sum(bytes) / 1048576) TotalSpace
+   from
+      dba_data_files
+   group by
+      tablespace_name
+   ) df,
+   (select
+      tablespace_name,
+      round(sum(bytes) / 1048576) FreeSpace
+   from
+snap
+
+select distinct * from (
+select 'expdp parfile=' || (select name from v$database) || '.par DIRECTORY=dbmaintenance_dp DUMPFILE=' || b.owner || '_' || (select to_char(sysdate,'MMDDYYYY') from dual) || '.dmp LOGFILE=' || (select name from v$database) || '_expdp_' || 
+b.owner || '.log SCHEMAS=' || b.owner from dba_users a, dba_segments b where a.username = b.owner and 
+a.username not in ('ANONYMOUS','AQ_ADMINISTRATOR_ROLE','CONNECT','CTXSYS','DBA','DBSNMP','DIP','DMSYS','EXFSYS','EXP_FULL_DATABASE','IMP_FULL_DATABASE',
+'JAVADEBUGPRIV','MDDATA','MDSYS','MGMT_USER','OEM_ADVISOR','OEM_MONITOR','OLAPSYS','OLAP_DBA','OLAP_USER','ORACLE_OCM','ORDPLUGINS','ORDSYS','OUTLN',
+'RECOVERY_CATALOG_OWNER','RESOURCE','SCHEDULER_ADMIN','SI_INFORMTN_SCHEMA','SYS','SYSMAN','SYSTEM','TSMSYS','WMSYS','XDB','SCOTT','AUDSYS','GSMADMIN_INTERNAL','APPQOSSYS','OJVMSYS','OPS$ORACLE') 
+union
+select 'expdp parfile=' || (select name from v$database) || '.par DIRECTORY=dbmaintenance_dp DUMPFILE=' || b.owner || '_' || (select to_char(sysdate,'MMDDYYYY') from dual) || '.dmp LOGFILE=' || (select name from v$database) || '_expdp_' || 
+b.owner || '.log SCHEMAS=' || b.owner from dba_users a, dba_segments b where a.username = b.owner and 
+a.username in ('TRADESDBO','EAGLEMGR','SECURITYDBO','EAGLEKB',
+'RULESDBO','CTRLCTR','DATAEXCHDBO','HOLDINGDBO','PACE_MASTERDBO','CASHDBO','MSGCENTER_DBO','ESTAR','PERFORMDBO',
+'LEDGERDBO','SCRUBDBO','ISTAR','ARCH_CTRLCTR','EAGLE_TEMP','DATAMARTDBO','EAGLEMART','ETK_USER','pace_masterdbo','EDMDBO') and a.account_status = 'OPEN' and a.username=b.owner 
+and b.tablespace_name not in ('USERS','SYSTEM') 
+union
+select 'expdp parfile=' || (select name from v$database) || '.par DIRECTORY=dbmaintenance_dp DUMPFILE=' || username || '_' || (select to_char(sysdate,'MMDDYYYY') from dual) || '.dmp LOGFILE=' || (select name from v$database) || '_expdp_' || username || '.log SCHEMAS=' || username from dba_users where 
+username like ('%MART%') or username in (SELECT CURRENT_PHYSICAL_PARTITION FROM estar.star_partition WHERE LOGICAL_PARTITION_ID != 1)
+and account_status = 'OPEN' 
+and default_tablespace not in ('USERS','SYSTEM'))
+
+--------------- TEMP tablespace ------------
+
+select a.tablespace_name tablespace,
+d.TEMP_TOTAL_MB,
+sum (a.used_blocks * d.block_size) / 1024 / 1024 TEMP_USED_MB,
+d.TEMP_TOTAL_MB - sum (a.used_blocks * d.block_size) / 1024 / 1024 TEMP_FREE_MB
+from v$sort_segment a,
+(
+select b.name, c.block_size, sum (c.bytes) / 1024 / 1024 TEMP_TOTAL_MB
+from v$tablespace b, v$tempfile c
+where b.ts#= c.ts#
+group by b.name, c.block_size
+) d
+where a.tablespace_name = d.name
+group by a.tablespace_name, d.TEMP_TOTAL_MB;
+
+------------ Clear SBT_TAPE type from rman -----------
+
+CONFIGURE DEFAULT DEVICE TYPE TO DISK;
+CONFIGURE CHANNEL DEVICE TYPE 'SBT_TAPE' CLEAR;
+CONFIGURE DEVICE TYPE 'SBT_TAPE' CLEAR;
+CONFIGURE CONTROLFILE AUTOBACKUP FORMAT FOR DEVICE TYPE 'SBT_TAPE' clear;
+
+*********** mc2 recycle *************
+
+./restart starweb extractservicelb extractserviceworker redissentinel redisserver kafkaservice
+
+********** parted ********
+
+partition with parted
+
+parted /dev/sdq<<EOF
+mklabel gpt
+mkpart primary 0GB 2199GB
+quit
+EOF
+
+parted /dev/sdm<<EOF
+mklabel gpt
+mkpart primary 0GB 4T
+quit
+EOF
+
+************ rman recovery **********
+
+list backup of archivelog sequence 3183;
+
+select recid,stamp,thread#,sequence#,first_change#,to_char(first_time,'Mon DD YYYY HH24:MI:SS'),next_change# from v$log_history;
+
+recover database using backup controlfile until cancel;
+
+select file#, substr(name, 1, 50), substr(tablespace_name, 1, 15), undo_opt_current_change#  from v$datafile_header where fuzzy='YES' ;
+
+select fuzzy, status, error, recover, checkpoint_change#, checkpoint_time, count(*) from v$datafile_header group by fuzzy, status, error, recover, checkpoint_change#, checkpoint_time ;
+
+recovery 
+
+run {
+set archivelog destination to 'provide dest';
+Restore archivelog from sequence 3157 until sequence 3183;
+}
+
+force open Db with corruption risk
+
+https://fatdba.com/2015/03/02/using-_allow_resetlogs_corruption-in-case-of-corruption-how-to-recover-open-the-database/
+
+alter database clear unarchived logfile group 1;
+
+ALTER DATABASE RENAME FILE '/users/oradata/u02/X720840/redo09b.log' TO '/ora-storage-01/oradata/prfl002/redofiles/redo09b.log'
+
+(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=10.130.34.110)(PORT=1521))))
+
+Status : Failure -Test failed: Listener refused the connection with the following error:
+ORA-12516, TNS:listener could not find available handler with matching protocol stack
+
+SQL "ALTER DATABASE RENAME FILE ''+REDO/R17L004/ONLINELOG/group_1.258.1043112203'' TO ''/ora-storage-01/oradata/prfl002/redologs/group_1a.log'' ";
+SQL "ALTER DATABASE RENAME FILE ''+FRA/R17L004/ONLINELOG/group_1.256.1043112203'' TO ''/ora-storage-01/oradata/prfl002/redologs/group_1b.log'' ";
+SQL "ALTER DATABASE RENAME FILE ''+REDO/R17L004/ONLINELOG/group_2.256.1043112205'' TO ''/ora-storage-01/oradata/prfl002/redologs/group_2a.log'' ";
+SQL "ALTER DATABASE RENAME FILE ''+FRA/R17L004/ONLINELOG/group_2.259.1043112205'' TO ''/ora-storage-01/oradata/prfl002/redologs/group_2b.log'' ";
+SQL "ALTER DATABASE RENAME FILE ''+REDO/R17L004/ONLINELOG/group_3.257.1043112205'' TO ''/ora-storage-01/oradata/prfl002/redologs/group_3a.log'' ";
+SQL "ALTER DATABASE RENAME FILE ''+FRA/R17L004/ONLINELOG/group_3.816.1043112207'' TO ''/ora-storage-01/oradata/prfl002/redologs/group_3b.log'' ";
+
+********** convert all filenames without space ************
+
+for f in *\ *; do mv "$f" "${f// /_}"; done
+
+*************** Selective Import *******************************
+
+impdp directory=DATA_PUMP_DIR dumpfile=web_configuration.dmp tables=estar.web_configuration query=web_configuration:\"where attribute in \(\'SYSNCSEND_STATIC_CONFIG\'\)\" table_exists_action=append
+
+********** cron *************
+
++---------------- minute (0 - 59)
+ |  +------------- hour (0 - 23)
+ |  |  +---------- day of month (1 - 31)
+ |  |  |  +------- month (1 - 12)
+ |  |  |  |  +---- day of week (0 - 6) (Sunday=0 or 7)
+ |  |  |  |  |
+ *  *  *  *  *  command to be executed
+
+*************** reorg table ***************************
+
+alter table RULESDBO.PRICE_STATUS enable row movement
+alter table RULESDBO.PRICE_STATUS shrink space cascade
+alter table RULESDBO.PRICE_STATUS disable row movement
+
+GATHER STATS
+
+http://www.br8dba.com/tag/gather-schema-stats/#:~:text=Gather%20STATS,-CASCADE%20%3D%3E%20TRUE%20%3A&text=ESTIMATE_PERCENT%20%3D%3E%20DBMS_STATS.,%E2%80%9C%E2%80%9D%20instead%20of%20all%20columns.
+
+**********************************************
+
+******************* perflab sqls **************************
+
+select sq.snap_id "SNAP ID", 
+       trunc(sn.begin_interval_time, 'MI') "BEGIN TIME", 
+       trunc(sn.end_interval_time, 'MI') "END TIME",
+       sq.sql_id "SQL ID", 
+       substr(st.sql_text,1,2000) "SQL TEXT", 
+       round(sq.cpu_time_delta/1000000,6) "TOTAL CPU", 
+       round(sq.elapsed_time_delta/1000000,6) "TOTAL ELAPSED",  
+       round(sq.cpu_time_delta/(1000000*sq.executions_delta),6) "AVG CPU", 
+       round(sq.elapsed_time_delta/(1000000*sq.executions_delta),6) "AVG ELAPSED", 
+       sq.executions_delta "EXEC TIMES",
+       round(sq.buffer_gets_delta/sq.executions_delta,6) "AVG BUFFER GETS", 
+       round(sq.rows_processed_delta/sq.executions_delta,6) "AVG ROWS PROC",
+       round(sq.disk_reads_delta/sq.executions_delta,6) "AVG DISK READS",
+       round(sq.apwait_delta/(1000000*sq.executions_delta),6) "AVG APP WAIT",
+       round(sq.ccwait_delta/(1000000*sq.executions_delta),6) "AVG CONCURRENT WAIT",
+       round(sq.clwait_delta/(1000000*sq.executions_delta),6) "AVG CLUSTER WAIT",
+       round(sq.iowait_delta/(1000000*sq.executions_delta),6) "AVG USER IO WAIT",
+       sq.loads_delta "LOADS", 
+       sq.sorts_delta "SORTS", 
+       sq.PLAN_HASH_VALUE "PLAN HASH VALUE", 
+       sq.LOADS_TOTAL "LOADS TOTAL"
+  from dba_hist_sqlstat sq, dba_hist_sqltext st, dba_hist_snapshot sn
+where sq.sql_id = st.sql_id and sq.dbid = st.dbid and sq.executions_delta <> 0 and 
+       ( (upper(substr(st.sql_text,1,2000))) like '%ESTAR_LEDGER_BALANCE%' ) and 
+       sq.snap_id = sn.snap_id and sq.dbid = sn.dbid and sq.instance_number = sn.instance_number
+   and sq.instance_number = 1
+order by sq.snap_id asc, sq.elapsed_time_delta  desc;
+/
+
+
+***************** one week oracle workload ********************
+
+WITH REDO_STATS AS (
+    SELECT SNAP_ID, INSTANCE_NUMBER, SUM(VALUE) AS REDO_SIZE
+    FROM DBA_HIST_SYSSTAT 
+    WHERE STAT_NAME = 'redo size'
+    GROUP BY SNAP_ID, INSTANCE_NUMBER
+),
+PHYSICAL_READS_STATS AS (
+    SELECT SNAP_ID, INSTANCE_NUMBER, SUM(VALUE) AS PHYSICAL_READS
+    FROM DBA_HIST_SYSSTAT 
+    WHERE STAT_NAME = 'physical reads'
+    GROUP BY SNAP_ID, INSTANCE_NUMBER
+),
+LOGICAL_READS_STATS AS (
+    SELECT SNAP_ID, INSTANCE_NUMBER, SUM(VALUE) AS LOGICAL_READS
+    FROM DBA_HIST_SYSSTAT 
+    WHERE STAT_NAME = 'session logical reads'
+    GROUP BY SNAP_ID, INSTANCE_NUMBER
+),
+ACTIVE_SESSIONS_STATS AS (
+    SELECT SNAP_ID, INSTANCE_NUMBER, COUNT(DISTINCT SESSION_ID) AS ACTIVE_SESSIONS
+    FROM DBA_HIST_ACTIVE_SESS_HISTORY
+    GROUP BY SNAP_ID, INSTANCE_NUMBER
+)
+SELECT 
+    TO_CHAR(SN.BEGIN_INTERVAL_TIME, 'YYYY-MM-DD HH24:MI:SS') AS SNAPSHOT_TIME,
+    SN.INSTANCE_NUMBER AS INSTANCE_ID,
+    ROUND(AVG(SS.VALUE), 2) AS CPU_USAGE, 
+    SUM(SQLS.EXECUTIONS_DELTA) AS EXECUTIONS, 
+    COALESCE(AVG(ASH.ACTIVE_SESSIONS), 0) AS ACTIVE_SESSIONS, 
+    SUM(LR.LOGICAL_READS) AS LOGICAL_READS, 
+    SUM(PR.PHYSICAL_READS) AS PHYSICAL_READS,
+    ROUND(SUM(RS.REDO_SIZE)/1024/1024, 2) AS REDO_SIZE_MB
+FROM DBA_HIST_SNAPSHOT SN
+LEFT JOIN DBA_HIST_OSSTAT SS ON SN.SNAP_ID = SS.SNAP_ID AND SS.STAT_NAME = 'LOAD'
+LEFT JOIN DBA_HIST_SQLSTAT SQLS ON SN.SNAP_ID = SQLS.SNAP_ID
+LEFT JOIN REDO_STATS RS ON SN.SNAP_ID = RS.SNAP_ID AND SN.INSTANCE_NUMBER = RS.INSTANCE_NUMBER
+LEFT JOIN PHYSICAL_READS_STATS PR ON SN.SNAP_ID = PR.SNAP_ID AND SN.INSTANCE_NUMBER = PR.INSTANCE_NUMBER
+LEFT JOIN LOGICAL_READS_STATS LR ON SN.SNAP_ID = LR.SNAP_ID AND SN.INSTANCE_NUMBER = LR.INSTANCE_NUMBER
+LEFT JOIN ACTIVE_SESSIONS_STATS ASH ON SN.SNAP_ID = ASH.SNAP_ID AND SN.INSTANCE_NUMBER = ASH.INSTANCE_NUMBER
+WHERE SN.BEGIN_INTERVAL_TIME >= SYSDATE - 7
+GROUP BY TO_CHAR(SN.BEGIN_INTERVAL_TIME, 'YYYY-MM-DD HH24:MI:SS'), SN.INSTANCE_NUMBER
+ORDER BY SNAPSHOT_TIME;
+
+
+--------------- workload data *************
+
+WITH snap_list AS
+(SELECT db.name db_name,
+snap.snap_id,
+snap.dbid,
+snap.instance_number,
+snap.begin_interval_time,
+EXTRACT (DAY FROM (snap.end_interval_time - snap.begin_interval_time))*24*60*60+ EXTRACT (HOUR FROM (snap.end_interval_time - snap.begin_interval_time))*60*60+ EXTRACT (MINUTE FROM (snap.end_interval_time - snap.begin_interval_time))*60+ EXTRACT (SECOND FROM (snap.end_interval_time - snap.begin_interval_time)) DELTA
+FROM dba_hist_snapshot snap,
+v$database db
+WHERE snap.snap_id IN
+(SELECT snap_id
+FROM dba_hist_snapshot
+WHERE BEGIN_INTERVAL_TIME > sysdate - 3
+)
+AND snap.dbid = db.dbid
+),
+DBA_SYS AS
+(SELECT t1.snap_id,
+t1.dbid,
+t1.instance_number,
+t1.event_name,
+t1.wait_class,
+(t1.total_waits - t2.total_waits) total_waits,
+(t1.total_timeouts - t2.total_timeouts) total_timeouts,
+((t1.time_waited_micro - t2.time_waited_micro) / 1000000) value
+FROM DBA_HIST_SYSTEM_EVENT t1,
+DBA_HIST_SYSTEM_EVENT t2
+WHERE t1.snap_id - 1 = t2.snap_id
+AND t1.dbid = t2.dbid
+AND t1.instance_number = t2.instance_number
+AND t1.event_id = t2.event_id
+AND t1.wait_class <> 'Idle'
+AND t1.wait_class = t2.wait_class
+AND t1.event_name = t2.event_name
+),
+twait_class AS
+(SELECT t1.snap_id,
+t1.dbid,
+t1.instance_number,
+t1.wait_class,
+sum((t1.total_waits - t2.total_waits)) total_waits,
+sum((t1.total_timeouts - t2.total_timeouts)) total_timeouts,
+sum((t1.time_waited_micro - t2.time_waited_micro) / 1000000) value
+FROM DBA_HIST_SYSTEM_EVENT t1,
+DBA_HIST_SYSTEM_EVENT t2
+WHERE t1.snap_id - 1 = t2.snap_id
+AND t1.dbid = t2.dbid
+AND t1.instance_number = t2.instance_number
+AND t1.event_id = t2.event_id
+AND t1.wait_class <> 'Idle'
+AND t1.wait_class = t2.wait_class
+AND t1.event_name = t2.event_name
+group by t1.snap_id,
+t1.dbid,
+t1.instance_number,
+t1.wait_class
+),
+DBA_MODEL AS
+(SELECT t1.snap_id,
+t1.dbid,
+t1.instance_number,
+t1.stat_name,
+((t1.value - t2.value) / 1000000) value
+FROM DBA_hist_sys_time_model t1,
+DBA_hist_sys_time_model t2
+WHERE t1.snap_id - 1 = t2.snap_id
+AND t1.dbid = t2.dbid
+AND t1.instance_number = t2.instance_number
+AND t1.stat_id = t2.stat_id
+),
+DBA_OS AS
+(SELECT t1.snap_id,
+t1.dbid,
+t1.instance_number,
+t1.stat_name,
+((t1.value - t2.value) / 100) value
+FROM DBA_HIST_OSSTAT t1,
+DBA_HIST_OSSTAT t2
+WHERE t1.snap_id - 1 = t2.snap_id
+AND t1.dbid = t2.dbid
+AND t1.instance_number = t2.instance_number
+And T1.Stat_Id = T2.Stat_Id
+),
+final_list as (SELECT tsnap.db_name,
+(Select Instance_Name From gV$instance Ts Where Ts.Instance_Number = Tsnap.Instance_Number) Inst,
+Tsnap.Snap_Id,
+TO_CHAR(begin_interval_time, 'DAY') dow,
+TO_CHAR(tsnap.begin_interval_time, 'MM/DD/YYYY') beg_dt,
+TO_CHAR(tsnap.begin_interval_time, 'HH24:MI') beg_hr,
+ROUND(tsnap.delta /60, 1) snap_delta,
+ROUND((t8.value +t9.value)/tsnap.delta, 0) host_cpus,
+ROUND(t8.value /DELTA, 1) host_cpu_use,
+ROUND(thcpus.maxval/100, 1) host_cpu_max,
+ROUND(t2.value /DELTA, 1) db_cpus,
+ROUND(tcpus.maxval /100, 1) db_cpus_max,
+ROUND(100*(tcpus.maxval /100)/((t8.value +t9.value)/tsnap.delta), 1) db_cpus_max_per,
+ROUND(tss.maxval) session_max,
+ROUND(taas.average) avg_active_sess,
+ROUND(taas.maxval) active_max,
+ROUND(100 -100*(t.value-t1.value)/t.value, 0) sql_percent,
+ROUND(t.value /60, 0) db_time,
+ROUND(t2.value /60, 0) db_cpu_time,
+NVL(ROUND(t3.value /60, 0), 0) user_io,
+NVL(ROUND(t4.value /60, 0), 0) concur,
+NVL(ROUND(t55.value/60, 0), 0) seq_read_mins,
+ROUND(1000*t55.value / decode(t55.total_waits, 0, 1, t55.total_waits), 2) seq_read_wait_ms,
+t55.total_waits seq_read_waits,
+NVL(ROUND(t6.value /60, 0), 0) log_file_sync,
+ROUND(1000*t6.value / decode(t6.total_waits, 0, 1, t6.total_waits), 2) log_file_sync_ms,
+NVL(ROUND(t5.value /60, 0), 0) buf_busy,
+NVL(ROUND(tlf.value/60, 0), 0) log_file_swtch,
+ROUND(tr.average, 0) redo,
+ROUND(tr.maxval, 0) redo_max,
+ROUND(tpr.average, 0) phy_reads,
+ROUND(tpr.maxval, 0) phy_reads_max,
+ROUND(tc.average, 0) block_chgs,
+ROUND(tpw.average, 0) phy_write,
+ROUND(tpw.maxval, 0) phy_write_max,
+ROUND(tt.average, 0) trans,
+Round(Thost1.Host_Mem) Host_Mem,
+Round(Tsga1.Sga_Use) Sga_Use,
+round(tpga1.pga_use) pga_use,
+Round((Tsga1.Sga_Use + Tpga1.Pga_Use)/Thost1.Host_Mem * 100,2) Host_Mem_Percent,
+tsgat.sga_target_cur_size sga_target,
+Tpgat.Pga_Target_Cur_Size Pga_Target
+FROM snap_list tsnap,
+(SELECT * FROM DBA_MODEL WHERE stat_name = 'DB time'
+) t,
+(SELECT * FROM DBA_MODEL WHERE stat_name = 'DB CPU'
+) t2,
+(SELECT * FROM DBA_OS WHERE stat_name = 'BUSY_TIME'
+) t8,
+(SELECT * FROM DBA_OS WHERE stat_name = 'IDLE_TIME'
+) t9,
+(SELECT * FROM DBA_MODEL WHERE stat_name = 'sql execute elapsed time'
+) t1,
+(SELECT *
+FROM twait_class
+WHERE wait_class = 'User I/O'
+) t3,
+(
+SELECT snap_id,
+dbid,
+instance_number,
+SUM(decode(event_name, 'buffer busy waits', 0, value)) value
+FROM DBA_SYS
+WHERE wait_class = 'Concurrency'
+GROUP BY snap_id,
+dbid,
+instance_number
+) t4,
+(SELECT * FROM DBA_SYS WHERE event_name = 'buffer busy waits'
+) t5,
+(SELECT * FROM DBA_SYS WHERE event_name = 'db file sequential read'
+) t55,
+(SELECT snap_id,
+dbid,
+instance_number,
+SUM(value) value
+FROM DBA_SYS
+WHERE event_name LIKE 'log file switch%'
+GROUP BY snap_id,
+dbid,
+instance_number
+) tlf,
+(SELECT * FROM DBA_SYS WHERE event_name = 'log file sync'
+) t6,
+(SELECT *
+FROM DBA_HIST_SYSMETRIC_SUMMARY
+WHERE metric_name = 'Redo Generated Per Sec'
+) tr,
+(SELECT *
+FROM DBA_HIST_SYSMETRIC_SUMMARY
+WHERE metric_name = 'Physical Reads Per Sec'
+) tpr,
+(SELECT *
+FROM DBA_HIST_SYSMETRIC_SUMMARY
+WHERE metric_name = 'DB Block Changes Per Sec'
+) tc,
+(SELECT *
+FROM DBA_HIST_SYSMETRIC_SUMMARY
+WHERE metric_name = 'Physical Writes Per Sec'
+) tpw,
+(SELECT *
+FROM DBA_HIST_SYSMETRIC_SUMMARY
+WHERE metric_name = 'User Transaction Per Sec'
+) tt,
+(SELECT *
+FROM DBA_HIST_SYSMETRIC_SUMMARY
+WHERE metric_name = 'CPU Usage Per Sec'
+) tcpus,
+(SELECT *
+FROM DBA_HIST_SYSMETRIC_SUMMARY
+WHERE metric_name = 'Average Active Sessions'
+) taas,
+(SELECT *
+FROM DBA_HIST_SYSMETRIC_SUMMARY
+WHERE metric_name = 'Host CPU Usage Per Sec'
+) thcpus,
+(SELECT * FROM DBA_HIST_SYSMETRIC_SUMMARY WHERE metric_name = 'Session Count'
+) tss,
+(SELECT ROUND(value/(1024*1024),1) AS HOST_MEM ,
+t1.*
+FROM DBA_HIST_OSSTAT t1
+WHERE t1.stat_name IN ('PHYSICAL_MEMORY_BYTES')
+)thost1,
+(SELECT current_size/(1024*1024) AS SGA_USE,
+t1.*
+FROM dba_hist_mem_dynamic_comp t1
+WHERE t1.component IN ('SGA Target')
+)tsga1,
+(SELECT ROUND(value/(1024*1024),1) AS PGA_USE,
+t1.*
+FROM DBA_HIST_PGASTAT t1
+WHERE t1.name IN ('total PGA allocated')
+)tpga1,
+(SELECT current_size/(1024*1024) AS pga_target_cur_size ,
+min_size /(1024*1024) AS pga_target_min_size,
+max_size /(1024*1024) AS pga_target_max_size,
+t1.*
+FROM dba_hist_mem_dynamic_comp t1
+WHERE component IN ('PGA Target')
+)tpgat,
+(SELECT current_size/(1024*1024) AS sga_target_cur_size ,
+min_size /(1024*1024) AS sga_target_min_size,
+max_size /(1024*1024) AS sga_target_max_size,
+t1.*
+FROM dba_hist_mem_dynamic_comp t1
+WHERE component IN ('SGA Target')
+)tsgat
+WHERE tsnap.snap_id = t.snap_id
+AND tsnap.dbid = t.dbid
+AND tsnap.instance_number = t.instance_number
+AND tsnap.snap_id = t1.snap_id (+)
+AND tsnap.dbid = t1.dbid (+)
+AND tsnap.instance_number = t1.instance_number (+)
+AND tsnap.snap_id = tlf.snap_id (+)
+AND tsnap.dbid = tlf.dbid (+)
+AND tsnap.instance_number = tlf.instance_number (+)
+AND tsnap.snap_id = t6.snap_id (+)
+AND tsnap.dbid = t6.dbid (+)
+AND tsnap.instance_number = t6.instance_number (+)
+AND tsnap.snap_id = t2.snap_id (+)
+AND tsnap.dbid = t2.dbid (+)
+AND tsnap.instance_number = t2.instance_number (+)
+AND tsnap.snap_id = t3.snap_id (+)
+AND tsnap.dbid = t3.dbid (+)
+AND tsnap.instance_number = t3.instance_number (+)
+AND tsnap.snap_id = t4.snap_id (+)
+AND tsnap.dbid = t4.dbid (+)
+AND tsnap.instance_number = t4.instance_number (+)
+AND tsnap.snap_id = t5.snap_id (+)
+AND tsnap.dbid = t5.dbid (+)
+AND tsnap.instance_number = t5.instance_number (+)
+AND tsnap.snap_id = t55.snap_id (+)
+AND tsnap.dbid = t55.dbid (+)
+AND tsnap.instance_number = t55.instance_number (+)
+AND tsnap.snap_id = t8.snap_id (+)
+AND tsnap.dbid = t8.dbid (+)
+AND tsnap.instance_number = t8.instance_number (+)
+AND tsnap.snap_id = t9.snap_id (+)
+AND tsnap.dbid = t9.dbid (+)
+AND tsnap.instance_number = t9.instance_number (+)
+AND tsnap.snap_id = tr.snap_id (+)
+AND tsnap.dbid = tr.dbid (+)
+AND tsnap.instance_number = tr.instance_number (+)
+AND tsnap.snap_id = tpr.snap_id (+)
+AND tsnap.dbid = tpr.dbid (+)
+AND tsnap.instance_number = tpr.instance_number (+)
+AND tsnap.snap_id = tc.snap_id (+)
+AND tsnap.dbid = tc.dbid (+)
+AND tsnap.instance_number = tc.instance_number (+)
+AND tsnap.snap_id = tpw.snap_id (+)
+AND tsnap.dbid = tpw.dbid (+)
+AND tsnap.instance_number = tpw.instance_number (+)
+AND tsnap.snap_id = tt.snap_id (+)
+AND tsnap.dbid = tt.dbid (+)
+AND tsnap.instance_number = tt.instance_number (+)
+AND tsnap.snap_id = tcpus.snap_id (+)
+AND tsnap.dbid = tcpus.dbid (+)
+AND tsnap.instance_number = tcpus.instance_number (+)
+AND tsnap.snap_id = thcpus.snap_id (+)
+AND tsnap.dbid = thcpus.dbid (+)
+AND tsnap.snap_id = taas.snap_id (+)
+AND tsnap.dbid = taas.dbid (+)
+AND tsnap.instance_number = taas.instance_number (+)
+AND tsnap.instance_number = thcpus.instance_number (+)
+AND tsnap.snap_id = tss.snap_id (+)
+AND tsnap.dbid = tss.dbid (+)
+AND tsnap.instance_number = tss.instance_number (+)
+AND tsnap.snap_id = thost1.snap_id (+)
+AND tsnap.dbid = thost1.dbid (+)
+AND tsnap.instance_number = thost1.instance_number (+)
+AND tsnap.snap_id = tsga1.snap_id (+)
+AND tsnap.dbid = tsga1.dbid (+)
+AND tsnap.instance_number = tsga1.instance_number (+)
+AND tsnap.instance_number = thost1.instance_number (+)
+AND tsnap.snap_id = tpga1.snap_id (+)
+AND tsnap.dbid = tpga1.dbid (+)
+AND tsnap.instance_number = tpga1.instance_number (+)
+AND tsnap.snap_id = tpgat.snap_id (+)
+AND tsnap.dbid = tpgat.dbid (+)
+AND tsnap.instance_number = tpgat.instance_number (+)
+AND tsnap.snap_id = tsgat.snap_id (+)
+And Tsnap.Dbid = Tsgat.Dbid (+)
+And Tsnap.Instance_Number = Tsgat.Instance_Number (+))
+Select * From Final_List Order By snap_id Desc, inst
+
+************************** Storage controller *********************
+
+lspci | grep -i -E 'sas|raid|scsi|nvme|storage'
+
+lsblk -o +HCTL
+
+queue depth - for d in /sys/class/scsi_device/*/device/queue_depth; do echo "$d: $(cat $d)"; done
+
+change queue depth
+
+vi /etc/udev/rules.d/99-scsi-queue.rules
+ACTION=="add|change", SUBSYSTEM=="scsi", ATTR{queue_depth}="128"
+
+udevadm control --reload
+udevadm trigger
+
+********************************************************************************************
+
+#!/bin/bash
+sqlplus -s -l / as sysdba<<EOF
+SET LONG 20000 LONGCHUNKSIZE 20000 PAGESIZE 0 LINESIZE 1000 FEEDBACK OFF VERIFY OFF TRIMSPOOL ON TERMOUT OFF
+spool createTBS.sql
+SELECT  
+case
+when a.contents = 'TEMPORARY' then 'create bigfile temporary tablespace ' || a.tablespace_name || ' tempfile ' || '''+DATA''' || ' size 10M autoextend on next 1G maxsize unlimited;' 
+when a.contents not in ('TEMPORARY') and ROUND(c.BYTES / 1024 / 1024,0) < 10 then 'create bigfile tablespace ' || a.tablespace_name || ' datafile ' || '''+DATA''' || 
+' size 10M autoextend on next 1G maxsize unlimited;'
+else
+'create bigfile tablespace ' || a.tablespace_name || ' datafile ' || '''+DATA''' || 
+' size '|| NVL(ROUND(c.BYTES / 1024 / 1024,0),10) || 'M autoextend on next 1G maxsize unlimited;'
+end
+    FROM dba_tablespaces a,
+       (    SELECT   tablespace_name, 
+                  SUM (BYTES) BYTES
+           FROM   dba_free_space
+       GROUP BY   tablespace_name
+       ) b,
+      (    SELECT   COUNT (1) DATAFILES, 
+                  SUM (BYTES) BYTES, 
+                  tablespace_name
+           FROM   dba_data_files
+       GROUP BY   tablespace_name
+    ) c
+  WHERE b.tablespace_name(+) = a.tablespace_name 
+    AND c.tablespace_name(+) = a.tablespace_name
+    AND a.tablespace_name not in ('SYSAUX','SYSTEM','APPQOSSYS','OJVMSYS','OPS$ORACLE')
+    AND a.tablespace_name not like 'TEMP%'
+    AND a.tablespace_name not like 'UNDO%'
+ORDER BY NVL (((c.BYTES - NVL (b.BYTES, 0)) / c.BYTES), 0) DESC;
+spool off;
+
+spool createRoles.sql
+select 'create role ' || role || ' ;'
+            from dba_roles
+            where role not in
+                  ('CONNECT','RESOURCE','SELECT_CATALOG_ROLE','GATHER_SYSTEM_STATISTICS','JAVA_DEPLOY',
+                   'EXECUTE_CATALOG_ROLE','EXP_FULL_DATABASE','OLAP_USER','RECOVERY_CATALOG_OWNER',
+                   'JAVAUSERPRIV','JAVA_ADMIN','DELETE_CATALOG_ROLE','LOGSTDBY_ADMINISTRATOR','AQ_USER_ROLE',
+                   'SCHEDULER_ADMIN','XDBWEBSERVICES','AQ_ADMINISTRATOR_ROLE','JAVASYSPRIV','XDBADMIN','HS_ADMIN_ROLE',
+                   'OEM_ADVISOR','JAVAIDPRIV','OLAP_DBA','DBA','IMP_FULL_DATABASE','WM_ADMIN_ROLE','JAVADEBUGPRIV',
+                   'EJBCLIENT','MGMT_USER','GLOBAL_AQ_USER_ROLE','AUTHENTICATEDUSER','OEM_MONITOR','CTXAPP','APPQOSSYS','OJVMSYS','OPS$ORACLE');
+spool off;
+
+spool createRolePrivs.sql
+select 'grant ' || granted_role || ' to ' || grantee || ';'
+           from dba_role_privs
+           where grantee not in ('SYSTEM','XDB','SELECT_CATALOG_ROLE','OLAPSYS','SYS',
+                                 'EXECUTE_CATALOG_ROLE','OLAP_USER','EXP_FULL_DATABASE','MDSYS','TSMSYS',
+                                 'SYSMAN','LOGSTDBY_ADMINISTRATOR','EXFSYS','ORDSYS','WMSYS','SCOTT',
+                                 'XDBADMIN','JAVASYSPRIV','OLAP_DBA','DBA','IMP_FULL_DATABASE','CTXSYS',
+                                 'MGMT_VIEW','MDDATA','DBSNMP','OUTLN','APPQOSSYS','OJVMSYS','OPS$ORACLE');
+spool off;
+
+spool createSysPrivs.sql
+select 'grant ' || privilege || ' to ' || grantee || ';'
+            from dba_sys_privs
+            where grantee not in ('ANONYMOUS','AQ_ADMINISTRATOR_ROLE','CONNECT','CTXSYS','DBA','DBSNMP','DIP','DMSYS',
+                                  'EXFSYS','EXP_FULL_DATABASE','IMP_FULL_DATABASE','JAVADEBUGPRIV','MDDATA','MDSYS',
+                                  'MGMT_USER','OEM_ADVISOR','OEM_MONITOR','OLAPSYS','OLAP_DBA','OLAP_USER','ORACLE_OCM',
+                                  'ORDPLUGINS','ORDSYS','OUTLN','RECOVERY_CATALOG_OWNER','RESOURCE','SCHEDULER_ADMIN',
+                                  'SI_INFORMTN_SCHEMA','SYS','SYSMAN','SYSTEM','TSMSYS','WMSYS','XDB','SCOTT','APPQOSSYS','OJVMSYS','OPS$ORACLE');
+spool off;
+
+spool createTabPrivs.sql
+select 'grant '||privilege||' on '||owner||'.'||table_name||' to '||grantee ||case when 
+                    grantable = 'YES' then ' with grant option' else null end||';'
+            from dba_tab_privs
+            where owner not in ('SYSTEM','XDB','SELECT_CATALOG_ROLE','OLAPSYS','SYS',
+                                 'EXECUTE_CATALOG_ROLE','OLAP_USER','EXP_FULL_DATABASE','MDSYS','TSMSYS',
+                                 'SYSMAN','LOGSTDBY_ADMINISTRATOR','EXFSYS','ORDSYS','WMSYS','SCOTT',
+                                 'XDBADMIN','JAVASYSPRIV','OLAP_DBA','DBA','IMP_FULL_DATABASE','CTXSYS',
+                                 'MGMT_VIEW','MDDATA','DBSNMP','OUTLN','APPQOSSYS','OJVMSYS','OPS$ORACLE');
+spool off;
+
+spool createDropUsers.sql
+select 'drop user ' || username || ' cascade;'
+            from dba_users where username not in ('SYS', 'SYSTEM', 'WMSYS', 'DRSYS','OUTLN', 'DBSNMP', 'XDB',
+'ORDSYS','CTXSYS', 'ORDPLUGINS', 'MDSYS','XS$NULL','APEX_PUBLIC_USER','SPATIAL_CSW_ADMIN_USR','ORACLE_OCM','MDDATA',
+'DIP','SPATIAL_WFS_ADMIN_USR','FLOWS_FILES','ORDDATA','SI_INFORMTN_SCHEMA','EXFSYS','APPQOSSYS','APEX_030200','OWBSYS_AUDIT',
+'OWBSYS','OLAPSYS','ANONYMOUS','MGMT_VIEW','SYSMAN','DBAUTL77','SYSTEM','SYS','AUDIT_UNDO','APPQOSSYS','OJVMSYS','OPS$ORACLE');
+spool off;
+
+spool createUsers.sql
+select 'create user ' || username || ' identified by eagle
+            default tablespace ' || default_tablespace || ' temporary tablespace ' || temporary_tablespace || ';'
+            from dba_users
+            where username not in ('SYS', 'SYSTEM', 'WMSYS', 'DRSYS','OUTLN', 'DBSNMP', 'XDB', 
+'ORDSYS','CTXSYS', 'ORDPLUGINS', 'MDSYS','XS$NULL','APEX_PUBLIC_USER','SPATIAL_CSW_ADMIN_USR','ORACLE_OCM','MDDATA',
+'DIP','SPATIAL_WFS_ADMIN_USR','FLOWS_FILES','ORDDATA','SI_INFORMTN_SCHEMA','EXFSYS','APPQOSSYS','APEX_030200','OWBSYS_AUDIT',
+'OWBSYS','OLAPSYS','ANONYMOUS','MGMT_VIEW','SYSMAN','DBAUTL77','SYSTEM','SYS','AUDIT_UNDO','APPQOSSYS','OJVMSYS','OPS$ORACLE');
+spool off;
+
+spool createTBSQuota.sql
+select 'alter user '|| USERNAME ||' quota unlimited on ' || TABLESPACE_NAME ||';'
+            from dba_ts_quotas
+            where username not in ('SYSTEM','XDB','SELECT_CATALOG_ROLE','OLAPSYS','SYS',
+                                 'EXECUTE_CATALOG_ROLE','OLAP_USER','EXP_FULL_DATABASE','MDSYS','TSMSYS',
+                                 'SYSMAN','LOGSTDBY_ADMINISTRATOR','EXFSYS','ORDSYS','WMSYS','SCOTT',
+                                 'XDBADMIN','JAVASYSPRIV','OLAP_DBA','DBA','IMP_FULL_DATABASE','CTXSYS',
+                                 'MGMT_VIEW','MDDATA','DBSNMP','OUTLN','APPQOSSYS','OJVMSYS','OPS$ORACLE');
+spool off;
+
+spool datafileSize
+select (select name from v\$database) Database_Name
+                 ,(select sum((bytes/1024/1024/1024)) from v\$datafile) datafile_size_in_gb
+                 ,(select sum((bytes/1024/1024/1024)) from v\$tempfile) tempfile_size_in_gb
+                 from dual;
+spool off;
+
+spool databaseSize
+select round(sum(bytes/(1024*1024*1024))) as GB FROM dba_segments;
+spool off;
+exit;
+EOF
+             
+***************************************************************************************
+
+*********** export import ***************
+
+https://oracle-base.com/articles/10g/oracle-data-pump-10g
+
+expdp parfile=/home/oracle/coredb_dmp/CORE15.par DIRECTORY=core15_dump DUMPFILE=core15_full.dmp LOGFILE=core15_full.log EXCLUDE=SCHEMA:\"IN \(\'SYS\', \'SYSTEM\', \'WMSYS\', \'DRSYS\',\'OUTLN\', \'DBSNMP\', \'XDB\',\'ORDSYS\',\'CTXSYS\', \'ORDPLUGINS\', \'MDSYS\',\'XSNULL\',\'APEX_PUBLIC_USER\',\'SPATIAL_CSW_ADMIN_USR\',\'ORACLE_OCM\',\'MDDATA\',\'DIP\',\'SPATIAL_WFS_ADMIN_USR\',\'FLOWS_FILES\',\'ORDDATA\',\'SI_INFORMTN_SCHEMA\',\'EXFSYS\',\'APPQOSSYS\',\'APEX_030200\',\'OWBSYS_AUDIT\',\'OWBSYS\',\'OLAPSYS\',\'ANONYMOUS\',\'MGMT_VIEW\',\'SYSMAN\'\)\" FULL=Y
+
+*********** kill msg center stream ***********
+
+shutdown MC
+
+1.	Find the stream in progress.
+
+select * from msgcenter_dbo.msg_message_stat order by start_processing_time desc
+
+2.	After identifying the stream ID MSG_STAT_ID, change its status to completed as below
+
+update msgcenter_dbo.msg_message_stat set end_processing_time = to_date('09/03/2018 08:52:56 AM','MM/DD/YYYY HH:MI:SS AM') where msg_stat_id =981452;
+
+
+************ resize tablespace ****************
+
+http://www.dba-oracle.com/art_dbazine_weeg_datafile_resizing_tips.htm
+
+##### Perl Module check #############
+
+perldoc perllocal
+
+##### linux system monitoring tool #########
+
+dstat -tcymsg -top --mem
+
+dstat -c --top-cpu -d --top-bio --top-latency
+
+to a file : dstat --output /tmp/sampleoutput.csv -cdn
+
+Every 5 second : dstat -c --top-cpu -d --top-bio --top-latency -C total -f 5
+
+############################################
+
+select distinct * from v$session;
+
+select 'alter system kill session'||''''||sid||','||SERIAL#||''''||'immediate;' from v$session where osuser = 'oracle';
+
+estar password in v12-----------------------------
+
+engines box----------
+cmdmgr.bin credentials --type=aes --action=add --dbname=usfa02 --dbuser=estar --dbpass=perflab1 --to=../cfg/.epasswd
+
+v12
+cmdmgr.bin credentials --type=aes --action=add --dbname=usfa01 --dbuser=estar --dbpass=perflab1 --to=../cfg/.epasswd
+cmdmgr.bin credentials --type=aes --action=add --dbname=usfa01 --dbuser=etk_user --dbpass=perflab1 --to=../cfg/.epasswd
+
+advance reporting box---------
+cmdmgr.exe credentials --type=aes --action=add --dbname=usfa01 --dbuser=estar --dbpass=perflab1 --to=../cfg/epasswd 
+cmdmgr.exe credentials --type=aes --action=add --dbname=usfa01 --dbuser=etk_user --dbpass=perflab1 --to=../cfg/epasswd 
+
+2017R2 --- AE
+
+cmdmgr.exe credentials --type=aes --action=add --name=edmd001 --user=estar --pass=eagle --credtype=Oracle --file=../cfg/epasswd
+cmdmgr.exe credentials --type=aes --action=add --name=edmd001 --user=etk_user --pass=eagle --credtype=Oracle --file=../cfg/epasswd
+
+cmdmgr.bin credentials --type=aes --action=add --name=edmd001 --user=estar --pass=eagle --credtype=Oracle --file=../cfg/.epasswd
+cmdmgr.bin credentials --type=aes --action=add --name=edmd001 --user=etk_user --pass=eagle --credtype=Oracle --file=../cfg/.epasswd
+
+Version 10
+
+move the epasswd file from commonconf
+
+go to bin folder
+
+estarpass -z ../commonconf/epasswd prpprd2_dr ESTAR prpE59_prd2
+
+--------- v12.1.1 EAGLE PATCH --------------------------------
+
+1.	Create a ‘test’ directory on the “/apps/username” e.g., “/apps/abwadev1/test”
+
+2.	Create a link for eaglemgr
+abwadev1@bwadev5-e01.eagleaccess.com /apps/abwadev1/test ln –s /apps/abwadev1/eaglemgr
+abwadev1@bwadev5-e01.eagleaccess.com /apps/abwadev1/test ls -ltr
+total 0
+0 lrwxrwxrwx 1 abwadev1 einstall 23 Dec 18 07:14 eaglemgr -> /apps/abwadev1/eaglemgr/
+
+************** bind entries in db **************
+
+select *
+ from estar.bind_summary s
+ where s.bind_procedure = 'GET_LAST_QUERY_DETAILS';
+ 
+ 
+ select *
+ from estar.master_events e
+ where e.event_subtype = 'GET_LAST_QUERY_DETAILS';
+ 
+ select *
+ from estar.bind_summary s
+ where s.bind_procedure = 'GET_LAST_QUERY_DETAILS';
+ 
+ ************************************************
+
+Emshell ports in linux box-----------------------------------
+
+Issue6:
+Engines show a   ?  Against them in engine manager and thin webserver is not visible 
+
+Please add the following two ports in the thick emshell.ini
+
+Under section 
+[plugin_api] 
+Please add the following Port
+ Plugin_port=20079
+
+Under section 
+[plugin_ui]
+Please add the following Port
+Plugin_port=20080
+
+############### LDAP Enabled #########################
+
+SELECT TRIM(username) UserName, FULL_NAME, LDAP_SERVER, LDAP_DOMAIN, ACCOUNT_STATE, (TRUNC(last_op_time)) Last_Logon_Date, TRUNC(SYSDATE)-TRUNC(LAST_OP_TIME) Last_Logon_Days, 
+(CASE 
+  WHEN TRUNC(SYSDATE)-TRUNC(LAST_OP_TIME) <= 1 THEN 'Today' 
+  WHEN TRUNC(SYSDATE)-TRUNC(LAST_OP_TIME) <= 7 THEN 'Last 7 Days' 
+    WHEN TRUNC(SYSDATE)-TRUNC(LAST_OP_TIME) <= 31 THEN 'Last 31 Days' 
+    WHEN TRUNC(SYSDATE)-TRUNC(LAST_OP_TIME) <= 90 THEN 'Last 90 Days' 
+    WHEN TRUNC(SYSDATE)-TRUNC(LAST_OP_TIME) <= 365 THEN 'Last 365 Days' 
+    WHEN TRUNC(SYSDATE)-TRUNC(LAST_OP_TIME) >= 365 THEN 'Older than 1 Year' 
+END) LoginPeriod 
+FROM pace_masterdbo.pace_users 
+WHERE LDAP_SERVER IS NOT NULL
+ORDER BY LAST_OP_TIME
+
+
+CGI Error ----------------------------------------------------
+
+make changes to eglcgilogin.ini in ePace folder
+Location=hardev2-e01.eagleaccess.com:8000
+
+Check Webserver registered in engine manager----------
+
+select * from eaglemgr.eagle_services where SERVICE_TYPE='WEBSERVER'
+
+.profile---------------------
+
+export EAGLE_ACCESS_PERL_LIBRARY=$HOME/nfs/FTPPERL/perllib
+export SITESEE_PACE_DIR=$HOME/nfs/FTPPERL/pace
+export PACE_DIR=$HOME/nfs/pacedata
+export SITESEE_STAR_DIR=$HOME/nfs/FTPPERL/star
+export MSGCENTER_DATA_SHARE=$HOME/nfs/mcdata
+
+****** Unlock Pace user *************
+
+select account_state from pace_masterdbo.pace_users where username = 'EAGLEADMIN'
+
+update pace_masterdbo.pace_users set account_state = 'U' where username = 'EAGLEADMIN'
+
+COMMIT
+
+************* check database patch *************************
+
+select action,action_time, description, patch_id, target_version from DBA_REGISTRY_SQLPATCH;
+
+PORT Ranges ******************************************************
+
+Star Ports:
+port-object range 4000 5000
+port-object range 15248 16248
+port-object eq 11248
+port-object range 20000 20080
+
+PACE ports:
+port-object range 1160 1165
+port-object range 2000 2005
+port-object range 3000 3005
+port-object range 8000 8005
+port-object range 20000 20050
+port-object eq 800
+port-object range 2006 2021
+port-object range 3006 3021
+port-object range 8006 8021
+port-object range 1166 1170
+port-object range 9000 9005
+port-object range 20051 20099
+
+*********** cpu and memory *****************
+
+nproc
+lscpu
+
+************ find files in updated in last 10 sec **********
+
+find . -type f -mmin -0.17
+
+*********** delete large number of files ********
+
+find . -type f -print0 | xargs -0rn 20 rm -f
+
+********************************************
+
+FW tpeserver stop ------------------
+
+run below on linux box with root user
+
+service iptables stop
+
+PACE HANG ISSUE -------------------
+
+find pace/server/pacelog/LOG -name *.LOG -mtime -1 | xargs egrep 'CheckCurrentJobsCount|No available server|ORA-12549|ORA-03113' > paceerrors_$(date +"%Y%m%d%H%M%S")
+
+find pace/server/pacelog/LOG -name *.LOG -print0 | xargs -0 egrep 'CheckCurrentJobsCount|No available server|ORA-12549|ORA-03113' > paceerrors_$(date +"%Y%m%d%H%M%S")
+
+VSphere setup 5.1 --------------
+
+1. regedit
+2. HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\Sk\Parameters
+3. create a registry with Type = DWORD, Value Name = EnableHCMON, Dave Value for Value Name = 1
+4. Reboot the system
+5. https://pghvcenter01.eagleinvsys.com:9443
+6. install windows authentication plugin from left bottom corner link
+
+############### DOS2UNIX ulternative #################
+
+Convert PC8 text files to ASCII
+Text files transferred from ftp will still include the CTRL-M characted, which could corrupt reading by installation script commands. The dos2unix Linux facility is missing, so 
+Note: dos2unix command is not found in the path the execute tr –d “\015” to remove CTRL-M characters. Make this command easier by developing a simple alias in the $HOME/.bashrc file
+$ alias dos2linux = ‘tr –d “\015” < $1 > temp_file; mv temp_file $1’ 
+So that the command is reduced to:
+$ dos2linux install_EagleV12.1.pl
+For recursive wildcards, the following compound statement can be executed:
+$ find . –name ‘*.pl’ –exec dos2linux {} \;
+
+dos2unix + chmod
+
+find . -type f \( -name *.pl -o -name *.sh \) | xargs chmod +x ; find . -type f \( -name *.pl -o -name *.sh \) | xargs dos2unix
+
+############################################
+
+egrep 'ORA-|PLS|SP2|ERROR' *.LOG
+egrep 'ORA-|PLS|SP2|ERROR' *.log
+
+########## APPID ######################
+
+******* sadmin *********
+
+S0l@r1s10
+
+param.dat entries ###########################
+
+"NXGSOAPPort" "9001" "1"
+"SOAPPort" "9000" "1"
+
+********** approximate file size in a tar file ***************
+
+tar -tvf pwtest_20170301_Wed_042601.tar | grep gz | awk '{ total += $3 }; END { print total }'
+
+########## NXG Navigator shows extra drop down servers ###############
+
+delete the server list from below file
+
+E:\Program Files\Eagle Investment Systems\EagleSTAR\tpe\modules\eshell\shell\Application Files\Servers.xml.deploy
+
+################ Check Activity on Database ############
+
+Session : --------------------------------------------------------
+
+SELECT  C.SQL_TEXT,
+        B.NAME,
+        A.SAMPLE_TIME,
+        COUNT(*),
+        SUM(TIME_WAITED)
+FROM    v$ACTIVE_SESSION_HISTORY A,
+        v$EVENT_NAME B,
+        v$SQLAREA C
+WHERE   A.SAMPLE_TIME BETWEEN '28-NOV-16 05:00:00 AM' AND
+                              '28-NOV-16 05:10:00 AM' AND
+        A.EVENT# = B.EVENT# AND
+        A.SQL_ID = C.SQL_ID
+GROUP BY C.SQL_TEXT, B.NAME, A.SAMPLE_TIME
+ORDER BY A.SAMPLE_TIME DESC
+
+AWR : --------------------------------------------------------------
+
+SELECT  TO_CHAR(SUBSTR(C.SQL_TEXT,0,3999)),
+        B.EVENT_NAME, 
+        A.SAMPLE_TIME,
+        COUNT(*), 
+        SUM(A.WAIT_TIME) 
+FROM    DBA_HIST_ACTIVE_SESS_HISTORY A, 
+        DBA_HIST_EVENT_NAME B, 
+        DBA_HIST_SQLTEXT C 
+WHERE   A.SAMPLE_TIME BETWEEN '24-JUL-21 07:40:00 PM' AND 
+                              '24-JUL-21 09:45:00 PM' AND 
+        A.EVENT_ID = B.EVENT_ID AND 
+        A.SQL_ID = C.SQL_ID 
+GROUP BY TO_CHAR(SUBSTR(C.SQL_TEXT,0,3999)), B.EVENT_NAME, A.SAMPLE_TIME 
+ORDER BY A.SAMPLE_TIME DESC
+
+********** Binary conversion of a script ***********
+
+shc -T -f script.sh
+
+*********** Rows per block for a table *************
+
+SELECT
+   count(*) as "Rows per Block"
+FROM
+   "CASHDBO"."CASH_ACTIVITY"
+WHERE
+   dbms_rowid.rowid_block_number(rowid) =
+     (
+     SELECT
+        min(dbms_rowid.rowid_block_number(rowid))
+     FROM "CASHDBO"."CASH_ACTIVITY"
+     )
+
+#########  Check Tablespace Size #############
+
+select b.tablespace_name, tbs_size SizeMb, a.free_space FreeMb
+from  (select tablespace_name, round(sum(bytes)/1024/1024 ,2) as free_space
+       from dba_free_space
+       group by tablespace_name) a,
+      (select tablespace_name, sum(bytes)/1024/1024 as tbs_size
+       from dba_data_files
+       group by tablespace_name) b
+where a.tablespace_name(+)=b.tablespace_name;
+
+GB
+
+select b.tablespace_name, tbs_size SizeGb, a.free_space FreeGb
+from  (select tablespace_name, round(sum(bytes)/1024/1024/1024 ,2) as free_space
+       from dba_free_space
+       group by tablespace_name) a,
+      (select tablespace_name, sum(bytes)/1024/1024/1024 as tbs_size
+       from dba_data_files
+       group by tablespace_name) b
+where a.tablespace_name(+)=b.tablespace_name;
+
+SELECT tablespace_name, SUM(bytes_used/1024/1024) USED, SUM(bytes_free/1024/1024) FREE
+FROM   V$temp_space_header GROUP  BY tablespace_name;
+SELECT   A.tablespace_name tablespace, D.gb_total,
+         SUM (A.used_blocks * D.block_size) / 1024 / 1024 / 1024 gb_used,
+         D.gb_total - SUM (A.used_blocks * D.block_size) / 1024 / 1024 / 1024 gb_free
+FROM     v$sort_segment A,
+         ( SELECT   B.name, C.block_size, SUM (C.bytes) / 1024 / 1024 / 1024 gb_total
+         FROM     v$tablespace B, v$tempfile C
+         WHERE    B.ts#= C.ts#
+         GROUP BY B.name, C.block_size
+         ) D
+WHERE    A.tablespace_name = D.name
+GROUP by A.tablespace_name, D.gb_total;
+
+https://zukus.blogspot.com/2016/06/temp-tablespace-usage-history.html
+
+History of temp usage-----
+
+select t.sample_time, t.sql_id, t.temp_mb, t.temp_diff
+       ,s.sql_text
+  from (
+        select --session_id,session_serial#,
+               --'alter system kill session ''' || session_id || ',' || session_serial# || ''' immediate;' kill_session_cmd,
+               trunc(sample_time) sample_time,sql_id, sum(temp_mb) temp_mb, sum(temp_diff) temp_diff
+               , row_number() over (partition by trunc(sample_time) order by sum(temp_mb) desc nulls last) as rn
+          from (
+                select sample_time,session_id,session_serial#,sql_id,temp_space_allocated/1024/1024 temp_mb, 
+                       temp_space_allocated/1024/1024-lag(temp_space_allocated/1024/1024,1,0) over (order by sample_time) as temp_diff
+                 from dba_hist_active_sess_history 
+                 --from v$active_session_history
+                where 1 = 1 
+                -- session_id=&1 
+                -- and session_serial#=&2
+               )
+         group by --session_id,session_serial#,
+                  trunc(sample_time),
+                  sql_id
+       ) t
+  left join v$sqlarea s
+    on s.sql_id = t.sql_id
+ where 1 = 1
+   and rn <=5
+   and sample_time >= trunc(sysdate) - 7                 
+ order by sample_time desc, temp_mb desc
+ 
+ ******************* locked active sessions ********************
+ 
+ select
+   c.owner,
+   c.object_name,
+   c.object_type,
+   b.sid,
+   b.serial#,
+   b.status,
+   b.osuser,
+   b.machine
+from
+     v$locked_object a ,
+   v$session b,
+   dba_objects c
+where
+   b.sid = a.session_id
+and
+   a.object_id = c.object_id
+   and b.status='ACTIVE';
+   
+*********** ASM ***************************
+
+select INST_ID, OPERATION, STATE, POWER, SOFAR, EST_WORK, EST_RATE, EST_MINUTES from GV$ASM_OPERATION;
+
+************* PGA and TEMP SPACE usage ************************
+
+select t.sql_id,
+t.top_level_sql_id,
+t.snap_id,
+t.sample_time,
+t.module,
+t.sql_plan_operation,
+t.sql_plan_options,
+ROUND(t.pga_allocated/(1024*1024), 0) pga_allocated_mb,
+ROUND(t.temp_space_allocated/(1024*1024), 0) temp_space_allocated_mb,
+(select sql_text from dba_hist_sqltext st where st.sql_id = t.sql_id and rownum < 2) sql_text_top,
+(select sql_text from dba_hist_sqltext st where st.sql_id = t.top_level_sql_id and rownum < 2) sql_text
+from dba_hist_active_sess_history t
+where snap_id=32816
+and temp_space_allocated =
+(select max(temp_space_allocated) FROM dba_hist_active_sess_history
+where temp_space_allocated is not null and sql_id is not null
+and snap_id=18443)
+
+http://o-dba.blogspot.com/2017/01/oracle-database-handy-scripts-pga-and.html
+
+********** UNDO tablespace ***********
+
+https://tamimdba.wordpress.com/tag/undo_retention/
+http://satya-dba.blogspot.com/2009/08/rollback-segments-in-oracle.html
+https://www.thegeekdiary.com/how-to-resize-the-undo-tablespace-in-oracle-database/
+https://support.oracle.com/epmos/faces/SrCreate?_adf.ctrl-state=vl4evrkiz_4&_afrLoop=184256777423788
+
+SET SERVEROUTPUT ON
+SET LINES 600
+ALTER SESSION SET NLS_DATE_FORMAT = 'DD/MM/YYYY HH24:MI:SS';
+
+DECLARE
+    v_analyse_start_time    DATE := SYSDATE - 7;
+    v_analyse_end_time      DATE := SYSDATE;
+    v_cur_dt                DATE;
+    v_undo_info_ret         BOOLEAN;
+    v_cur_undo_mb           NUMBER;
+    v_undo_tbs_name         VARCHAR2(100);
+    v_undo_tbs_size         NUMBER;
+    v_undo_autoext          BOOLEAN;
+    v_undo_retention        NUMBER(5);
+    v_undo_guarantee        BOOLEAN;
+    v_instance_number       NUMBER;
+    v_undo_advisor_advice   VARCHAR2(100);
+    v_undo_health_ret       NUMBER;
+    v_problem               VARCHAR2(1000);
+    v_recommendation        VARCHAR2(1000);
+    v_rationale             VARCHAR2(1000);
+    v_retention             NUMBER;
+    v_utbsize               NUMBER;
+    v_best_retention        NUMBER;
+    v_longest_query         NUMBER;
+    v_required_retention    NUMBER;
+BEGIN
+    select sysdate into v_cur_dt from dual;
+    DBMS_OUTPUT.PUT_LINE(CHR(9));
+    DBMS_OUTPUT.PUT_LINE('- Undo Analysis started at : ' || v_cur_dt || ' -');
+    DBMS_OUTPUT.PUT_LINE('--------------------------------------------------');
+
+    v_undo_info_ret := DBMS_UNDO_ADV.UNDO_INFO(v_undo_tbs_name, v_undo_tbs_size, v_undo_autoext, v_undo_retention, v_undo_guarantee);
+    select sum(bytes)/1024/1024 into v_cur_undo_mb from dba_data_files where tablespace_name = v_undo_tbs_name;
+
+    DBMS_OUTPUT.PUT_LINE('NOTE:The following analysis is based upon the database workload during the period -');
+    DBMS_OUTPUT.PUT_LINE('Begin Time : ' || v_analyse_start_time);
+    DBMS_OUTPUT.PUT_LINE('End Time   : ' || v_analyse_end_time);
+    
+    DBMS_OUTPUT.PUT_LINE(CHR(9));
+    DBMS_OUTPUT.PUT_LINE('Current Undo Configuration');
+    DBMS_OUTPUT.PUT_LINE('--------------------------');
+    DBMS_OUTPUT.PUT_LINE(RPAD('Current undo tablespace',55) || ' : ' || v_undo_tbs_name);
+    DBMS_OUTPUT.PUT_LINE(RPAD('Current undo tablespace size (datafile size now) ',55) || ' : ' || v_cur_undo_mb || 'M');
+    DBMS_OUTPUT.PUT_LINE(RPAD('Current undo tablespace size (consider autoextend) ',55) || ' : ' || v_undo_tbs_size || 'M');
+    IF V_UNDO_AUTOEXT THEN
+        DBMS_OUTPUT.PUT_LINE(RPAD('AUTOEXTEND for undo tablespace is',55) || ' : ON');  
+    ELSE
+        DBMS_OUTPUT.PUT_LINE(RPAD('AUTOEXTEND for undo tablespace is',55) || ' : OFF');  
+    END IF;
+    DBMS_OUTPUT.PUT_LINE(RPAD('Current undo retention',55) || ' : ' || v_undo_retention);
+
+    IF v_undo_guarantee THEN
+        DBMS_OUTPUT.PUT_LINE(RPAD('UNDO GUARANTEE is set to',55) || ' : TRUE');
+    ELSE
+        dbms_output.put_line(RPAD('UNDO GUARANTEE is set to',55) || ' : FALSE');
+    END IF;
+    DBMS_OUTPUT.PUT_LINE(CHR(9));
+
+    SELECT instance_number INTO v_instance_number FROM V$INSTANCE;
+
+    DBMS_OUTPUT.PUT_LINE('Undo Advisor Summary');
+    DBMS_OUTPUT.PUT_LINE('---------------------------');
+
+    v_undo_advisor_advice := dbms_undo_adv.undo_advisor(v_analyse_start_time, v_analyse_end_time, v_instance_number);
+    DBMS_OUTPUT.PUT_LINE(v_undo_advisor_advice);
+
+    DBMS_OUTPUT.PUT_LINE(CHR(9));
+    DBMS_OUTPUT.PUT_LINE('Undo Space Recommendation');
+    DBMS_OUTPUT.PUT_LINE('-------------------------');
+
+    v_undo_health_ret := dbms_undo_adv.undo_health(v_analyse_start_time, v_analyse_end_time, v_problem, v_recommendation, v_rationale, v_retention, v_utbsize);
+    IF v_undo_health_ret > 0 THEN
+        DBMS_OUTPUT.PUT_LINE('Minimum Recommendation           : ' || v_recommendation);
+        DBMS_OUTPUT.PUT_LINE('Rationale                        : ' || v_rationale);
+        DBMS_OUTPUT.PUT_LINE('Recommended Undo Tablespace Size : ' || v_utbsize || 'M');
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('Allocated undo space is sufficient for the current workload.');
+    END IF;
+    
+    SELECT dbms_undo_adv.best_possible_retention(v_analyse_start_time, v_analyse_end_time) into v_best_retention FROM dual;
+    SELECT dbms_undo_adv.longest_query(v_analyse_start_time, v_analyse_end_time) into v_longest_query FROM dual;
+    SELECT dbms_undo_adv.required_retention(v_analyse_start_time, v_analyse_end_time) into v_required_retention FROM dual;
+
+    DBMS_OUTPUT.PUT_LINE(CHR(9));
+    DBMS_OUTPUT.PUT_LINE('Retention Recommendation');
+    DBMS_OUTPUT.PUT_LINE('------------------------');
+    DBMS_OUTPUT.PUT_LINE(RPAD('The best possible retention with current configuration is ',60) || ' : ' || v_best_retention || ' Seconds');
+    DBMS_OUTPUT.PUT_LINE(RPAD('The longest running query ran for ',60) || ' : ' || v_longest_query || ' Seconds');
+    DBMS_OUTPUT.PUT_LINE(RPAD('The undo retention required to avoid errors is ',60) || ' : ' || v_required_retention || ' Seconds');
+
+END;
+/
+
+******************************************************
+
+ SELECT t.tablespace_name "Tablespace", d.BYTES/1024/1024/1024 "Space Allocated GB",
+t.status "Status", 
+ROUND ((MAX (d.BYTES) / 1024 / 1024) - (SUM (DECODE (f.BYTES, 
+NULL, 0, 
+f.BYTES 
+)) / 1024 / 1024), 2) "Used MB", 
+ROUND (SUM (DECODE (f.BYTES, 
+NULL, 0, 
+f.BYTES 
+)) / 1024 / 1024, 2) "Free MB", 
+SUBSTR (d.file_name, 
+1, 
+80 
+) "Datafile name" 
+FROM dba_free_space f, 
+dba_data_files d, 
+dba_tablespaces t 
+WHERE t.tablespace_name = d.tablespace_name AND 
+f.tablespace_name(+) = d.tablespace_name AND 
+f.file_id(+) = d.file_id 
+GROUP BY t.tablespace_name, d.bytes,
+d.file_name, 
+t.status 
+ORDER BY 1, 
+3 DESC 
+
+
+select b.tablespace_name, tbs_size SizeMb, a.free_space FreeMb
+from
+(select tablespace_name, round(sum(bytes)/1024/1024 ,2) as free_space
+from dba_free_space group by tablespace_name) a,
+(select tablespace_name, sum(bytes)/1024/1024 as tbs_size
+from dba_data_files group by tablespace_name
+UNION
+select tablespace_name, sum(bytes)/1024/1024 tbs_size
+from dba_temp_files
+group by tablespace_name ) b
+where a.tablespace_name(+)=b.tablespace_name;
+
+########## sql using temp tablespace ##############
+
+SELECT /*+ ORDERED */
+u.tablespace,
+s.sid || ',' || s.serial# as sid_ser,
+s.username,
+s.osuser,
+(SUM(u.blocks)*TO_NUMBER(a.value))/1048576 as blk_mb,
+x.sql_text,
+s.module || ':' || s.action as "Module:Action"
+FROM v$sort_usage u
+,v$session S
+,v$sql X
+,v$parameter a
+WHERE s.saddr = u.session_addr
+AND s.sql_address = x.address
+AND s.sql_hash_value = x.hash_value
+AND a.name = 'db_block_size'
+GROUP
+BY u.tablespace
+, s.sid
+, s.serial#
+, s.username
+, s.osuser
+, a.value
+, x.sql_text
+, s.module
+, s.action
+ORDER
+BY u.tablespace
+, s.sid
+;
+
+******************** insurance ***********************
+
+https://hr.bnymellon.net/aonanviti , https://hr.bnymellon.com/aonanviti
+
+######### db size ##############
+
+select (select name from v$database) Database_Name
+             ,(select sum((bytes/1024/1024/1024)) from v$datafile) datafile_size_in_gb
+             ,(select sum((bytes/1024/1024/1024)) from v$tempfile) tempfile_size_in_gb
+             from dual;
+             
+SELECT tablespace_name, round(sum(bytes/(1024*1024*1024))) as GB FROM dba_segments 
+group by TABLESPACE_NAME
+order by 2 desc ;
+
+select round(sum(bytes/(1024*1024*1024))) as GB FROM dba_segments 
+
+re-create temp tablespace
+
+CREATE TEMPORARY TABLESPACE temp2 TEMPFILE '/u01/app/oracle/oradata/DB11G/temp02.dbf' SIZE 2G AUTOEXTEND ON NEXT 1G;
+
+ALTER DATABASE DEFAULT TEMPORARY TABLESPACE temp2;
+
+-- Switch all existing users to new temp tablespace.
+BEGIN
+  FOR cur_user IN (SELECT username FROM dba_users WHERE temporary_tablespace = 'TEMP' and oracle_maintained='N') LOOP
+    EXECUTE IMMEDIATE 'ALTER USER ' || cur_user.username || ' TEMPORARY TABLESPACE TEMP2';
+  END LOOP;
+END;
+/
+
+BEGIN
+  FOR cur_user IN (SELECT username FROM dba_users WHERE temporary_tablespace = 'TEMP') LOOP
+    EXECUTE IMMEDIATE 'ALTER USER ' || cur_user.username || ' TEMPORARY TABLESPACE TEMP2';
+  END LOOP;
+END;
+/
+
+SELECT 'ALTER SYSTEM KILL SESSION '''||SID ||','|| SERIAL#||''' IMMEDIATE;'  FROM V$SESSION WHERE SERIAL# in (SELECT SESSION_NUM FROM V$SORT_USAGE)
+
+1. Create Temporary Tablespace Temp
+
+CREATE TEMPORARY TABLESPACE TEMP2 TEMPFILE  ‘/u01/app/oradata/temp01′ SIZE 2000M, ‘/u01/app/oradata/temp02′ SIZE 2000M'; 
+create bigfile temporary tablespace temp tempfile '+data' size 1G autoextend on next 1G maxsize unlimited;
+
+2. Move Default Database temp tablespace
+
+ALTER DATABASE DEFAULT TEMPORARY TABLESPACE temp2;
+
+3. Make sure No sessions are using your Old Temp tablespace
+
+   a.  Find Session Number from V$SORT_USAGE: 
+       SELECT USERNAME, SESSION_NUM, SESSION_ADDR FROM V$SORT_USAGE; 
+
+   b.  Find Session ID from V$SESSION:
+
+       If the resultset contains any rows then your next step will be to find the SID from the V$SESSION view. You can find session id by using SESSION_NUM or SESSION_ADDR from previous resultset.
+
+       SELECT SID, SERIAL#, STATUS FROM V$SESSION WHERE SERIAL#=SESSION_NUM;
+       OR
+       SELECT SID, SERIAL#, STATUS FROM V$SESSION WHERE SADDR=SESSION_ADDR; 
+
+    c.  Kill Session:
+
+    Now kill the session with IMMEDIATE.
+
+    ALTER SYSTEM KILL SESSION 'SID,SERIAL#' IMMEDIATE; 
+
+4. Drop temp tablespace
+
+DROP TABLESPACE temp INCLUDING CONTENTS AND DATAFILES;
+
+5. Recreate Tablespace Temp
+
+CREATE TEMPORARY TABLESPACE TEMP TEMPFILE /u01/app/temp/temp01′ SIZE 2000M;
+
+6 Move Tablespace Temp, back to new temp tablespace
+
+ALTER DATABASE DEFAULT TEMPORARY TABLESPACE temp;
+
+7. Drop temporary for tablespace temp
+
+DROP TABLESPACE temp2 INCLUDING CONTENTS AND DATAFILES;
+
+############# Truncate and remove data ##############
+
+Removed warehouse, local CG data, and some message center log data:
+
+set serveroutput on
+
+BEGIN
+  FOR REC IN
+  (
+  SELECT 'truncate table ' || OWNER || '.' || table_name SQL_TEXT
+  FROM dba_tables
+  WHERE  owner in ('CG_ARCHIVE', 'CGDATA', 'CASHDBO', 'CASHDBO02', 'HOLDINGDBO', 'HOLDINGDBO2', 'LEDGERDBO', 'LEDGERDBO02', 'TRADESDBO', 'TRADESDBO2') and num_rows > 0
+  ORDER BY 1
+  )
+  LOOP
+    BEGIN
+      EXECUTE IMMEDIATE REC.SQL_TEXT;
+    EXCEPTION
+    WHEN OTHERS THEN
+       DBMS_OUTPUT.PUT_LINE(REC.SQL_TEXT);
+    END;
+  END LOOP;
+END;
+
+-- These failed:
+
+truncate table CGDATA.ISG_DIM_DATA_GROUP
+truncate table CGDATA.ISG_DIM_INTERFACE
+truncate table CGDATA.ISG_DIM_SYSTEM
+truncate table HOLDINGDBO.POSITION
+truncate table HOLDINGDBO.POSITION_DETAIL
+truncate table HOLDINGDBO2.POSITION
+truncate table HOLDINGDBO2.POSITION_DETAIL
+
+-- Create drop constraint so we can truncate above tables:
+
+select 'alter table ' || r_owner || '.' || table_name || ' drop constraint ' || constraint_name || ';'
+from all_constraints
+where r_owner in ('CGDATA', 'HOLDINGDBO', 'HOLDINGDBO2')
+and constraint_type = 'R';
+
+-- After constraints were removed the table were truncated
+
+-- Additional 1 off tables which were truncated:
+
+truncate table MSGCENTER_DBO.MSG_RECORD_RESULTMESSAGE;
+truncate table MSGCENTER_DBO.MSG_DETAIL;
+truncate table MSGCENTER_DBO.SCHEDULER_RW_REPORTS;
+truncate table MSGCENTER_DBO.MSG_RECORD_STATUS;
+truncate table MSGCENTER_DBO.SCHEDULE_EVENT_SUMMARY;
+truncate table MSGCENTER_DBO.LOTS_BALANCES_EXCEPTION;
+truncate table MSGCENTER_DBO.LEDGER_BALANCES_EXCEPTION;
+
+############### Create user with grants ################
+
+create user pace_masterdbo
+identified by eagle;
+grant create session to pace_masterdbo;
+grant create table to pace_masterdbo;
+grant create sequence to pace_masterdbo;
+grant create view to pace_masterdbo;
+grant create procedure to pace_masterdbo;
+grant unlimited tablespace to pace_masterdbo;
+grant select any table to pace_masterdbo;
+grant select any dictionary to pace_masterdbo;
+grant execute on dbms_workload_repository to pace_masterdbo;
+
+
+######### Temp tablespace size ###############
+
+SELECT tablespace_name, SUM(bytes_used/1024/1024/1024), SUM(bytes_free/1024/1024/1024)
+FROM V$temp_space_header
+GROUP BY tablespace_name;
+
+select * from v$tempfile
+
+select * from dba_temp_files
+
+select tablespace_name, free_space/1024/1024/1024 GB from dba_temp_free_space;
+
+select * from dba_hist_active_sess_history where temp_space_allocated in 
+(select max(temp_space_allocated) from dba_hist_active_sess_history where temp_space_allocated is not null)
+
+select sql_id,temp_space_allocated from dba_hist_active_sess_history where sample_time > sysdate-4 and temp_space_allocated is not null 
+order by temp_space_allocated desc 
+
+######## datafile and tempfile ###############
+
+ALTER TABLESPACE  MSGCENTER_TAB ADD DATAFILE '/eagledb/oradata/pw012013/msgcenter_tab_f02.dbf' SIZE 100M AUTOEXTEND ON NEXT 1M
+
+alter tablespace ESTAR_TEMP ADD TEMPFILE '/home1/oradata/pwtest/estar_temp_f06.dbf' SIZE 5000M AUTOEXTEND ON NEXT 100M
+
+autoextend a datafile : alter database tempfile '/home1/oradata/pwtest/estar_temp_f03.dbf' autoextend ON next 100M
+
+########### Check freespace in tablespace #############
+
+SELECT  a.tablespace_name,
+    ROUND (((c.BYTES - NVL (b.BYTES, 0)) / c.BYTES) * 100,2) percentage_used,
+    c.BYTES / 1024 / 1024 space_allocated,
+    ROUND (c.BYTES / 1024 / 1024 - NVL (b.BYTES, 0) / 1024 / 1024,2) space_used,
+    ROUND (NVL (b.BYTES, 0) / 1024 / 1024, 2) space_free, 
+    c.DATAFILES
+  FROM dba_tablespaces a,
+       (    SELECT   tablespace_name, 
+                  SUM (BYTES) BYTES
+           FROM   dba_free_space
+       GROUP BY   tablespace_name
+       ) b,
+      (    SELECT   COUNT (1) DATAFILES, 
+                  SUM (BYTES) BYTES, 
+                  tablespace_name
+           FROM   dba_data_files
+       GROUP BY   tablespace_name
+    ) c
+  WHERE b.tablespace_name(+) = a.tablespace_name 
+    AND c.tablespace_name(+) = a.tablespace_name
+ORDER BY NVL (((c.BYTES - NVL (b.BYTES, 0)) / c.BYTES), 0) DESC;
+
+****************** srvctl *************************
+
+mkdir -p /u01/app/oracle/product/12.2.0.1/db/bin
+touch /u01/app/oracle/product/12.2.0.1/db/bin/oracle /u01/app/oracle/product/12.2.0.1/db/bin/oraclehome
+/u01/app/oracle/product/19.3.0.0/db/bin/srvctl upgrade database -d edmd006 -oraclehome /u01/app/oracle/product/19.3.0.0/db
+
+srvctl config database -d mmfd003
+
+************** vault board ********************
+
+https://eagleinvsys.atlassian.net/jira/software/c/projects/PPL/boards/1010
+
+****************************************************
+
+EXEC DBMS_WORKLOAD_REPOSITORY.create_snapshot;
+
+*************** create bigfile script ****************
+
+SELECT  
+case
+when a.contents = 'TEMPORARY' then 'create bigfile temporary tablespace ' || a.tablespace_name || ' tempfile ' || '''+DATA''' || ' size 10M autoextend on next 1G maxsize unlimited;' 
+when a.contents not in ('TEMPORARY') and ROUND(c.BYTES / 1024 / 1024,0) < 10 then 'create bigfile tablespace ' || a.tablespace_name || ' datafile ' || '''+DATA''' || 
+' size 10M autoextend on next 1G maxsize unlimited;'
+else
+'create bigfile tablespace ' || a.tablespace_name || ' datafile ' || '''+DATA''' || 
+' size '|| NVL(ROUND(c.BYTES / 1024 / 1024,0),10) || 'M autoextend on next 1G maxsize unlimited;'
+end
+    FROM dba_tablespaces a,
+       (    SELECT   tablespace_name, 
+                  SUM (BYTES) BYTES
+           FROM   dba_free_space
+       GROUP BY   tablespace_name
+       ) b,
+      (    SELECT   COUNT (1) DATAFILES, 
+                  SUM (BYTES) BYTES, 
+                  tablespace_name
+           FROM   dba_data_files
+       GROUP BY   tablespace_name
+    ) c
+  WHERE b.tablespace_name(+) = a.tablespace_name 
+    AND c.tablespace_name(+) = a.tablespace_name
+    AND a.tablespace_name not in ('UNDOTBS1','SYSAUX','SYSTEM','UNDO','TEMP')
+ORDER BY NVL (((c.BYTES - NVL (b.BYTES, 0)) / c.BYTES), 0) DESC;
+
+**************** ignore datapatch error *************
+
+./datapatch -verbose -ignorable_errors ORA-38824
+
+################ UNDO Tablespace ###############################
+
+select to_char(begin_time, 'DD-MON-RR HH24:MI') begin_time,
+to_char(end_time, 'DD-MON-RR HH24:MI') end_time, tuned_undoretention
+from v$undostat order by TUNED_UNDORETENTION desc;
+
+select * from V$PARAMETER where name like 'undo_retention'
+
+select tablespace_name,status,count(*)
+from dba_undo_extents
+group by tablespace_name,status;
+
+################## get IO details ######################
+
+select min(begin_time), max(end_time),
+       sum(case metric_name when 'Physical Read Total Bytes Per Sec' then average end) Physical_Read_Total_Bps,
+       sum(case metric_name when 'Physical Write Total Bytes Per Sec' then average end) Physical_Write_Total_Bps,
+       sum(case metric_name when 'Redo Generated Per Sec' then average end) Redo_Bytes_per_sec,
+       sum(case metric_name when 'Physical Read Total IO Requests Per Sec' then average end) Physical_Read_IOPS,
+       sum(case metric_name when 'Physical Write Total IO Requests Per Sec' then average end) Physical_write_IOPS,
+       sum(case metric_name when 'Redo Writes Per Sec' then average end) Physical_redo_IOPS,
+       sum(case metric_name when 'Current OS Load' then average end) OS_LOad,
+       sum(case metric_name when 'CPU Usage Per Sec' then average end) DB_CPU_Usage_per_sec, 
+       sum(case metric_name when 'Host CPU Utilization (%)' then average end) Host_CPU_util, --NOTE 100% = 1 loaded RAC node
+       sum(case metric_name when 'Network Traffic Volume Per Sec' then average end) Network_bytes_per_sec, 
+       snap_id
+from eaglemgr.LAB_HIST_SYSMETRIC_SUMMARY
+group by snap_id
+order by snap_id;
+
+************ current sqls running ************
+
+select a.sql_text from v$session s, v$sql a
+where s.username is not null and s.status = 'ACTIVE' and a.sql_id=s.sql_id
+order by s.logon_time, s.sid
+
+################ Time remaining for a script ###################
+
+SELECT osuser,
+sl.sql_id,
+sl.sql_hash_value,
+opname,
+target,
+elapsed_seconds,
+time_remaining
+FROM v$session_longops sl
+inner join v$session s ON sl.SID = s.SID AND sl.SERIAL# = s.SERIAL#
+WHERE time_remaining > 0;
+
+************* index details ***********
+
+select index_name, table_name,  index_type, uniqueness, table_type, status
+       ,(select status from user_ind_partitions where index_name = ai.index_name)
+from   user_indexes ai
+where  table_name = 'ESTAR_CASH_PROJECTION_DETAILS'
+order  by 1, 2;
+
+select index_name, table_name, column_name, column_position 
+from   user_ind_columns
+where  table_name  = 'ESTAR_CASH_PROJECTION_DETAILS'
+order  by index_name, 4;
+
+select table_name, index_name, column_expression, column_position
+from   user_ind_expressions
+where  table_name  = 'ESTAR_CASH_PROJECTION_DETAILS'
+order  by 1;
+
+*************** snowflake ****************
+
+https://kvumiwl-ex79256.snowflakecomputing.com
+
+username - amitkhaladkar1984
+pwd - apr2025Longhorn
+
+
+############# AWR ###################
+
+https://docs.oracle.com/en/database/oracle/oracle-database/12.2/arpls/DBMS_WORKLOAD_REPOSITORY.html#GUID-95F43A4E-426C-4B3B-BD4F-AE8FCE2DD777
+
+SELECT output FROM
+      TABLE
+      (dbms_workload_repository.awr_report_html(
+      :dbid,
+      :inst_num,
+      :bid,
+      :eid,
+      :rpt_options))
+      
+RAC
+
+SELECT output FROM
+      TABLE
+      (dbms_workload_repository.awr_global_report_html(
+      :dbid,
+      '1,2',
+      :bid,
+      :eid,
+      :rpt_options));
+      
+SELECT output FROM TABLE (dbms_workload_repository.awr_report_html( (select dbid from v$database), (select instance_number from v$instance), (select max(snap_id) - 1 from DBA_HIST_SNAPSHOT ), (select max(snap_id) from DBA_HIST_SNAPSHOT ),8)); 
+
+################ Check if baselines are being used ##############
+
+SELECT s.sql_id, s.sql_plan_baseline, b.sql_handle, b.plan_name, b.last_executed, s.child_number, 
+  s.plan_hash_value, s.executions, s.sql_text
+FROM v$sql s, dba_sql_plan_baselines b
+WHERE s.exact_matching_signature = b.signature(+)
+  AND s.sql_plan_baseline = b.plan_name(+)
+  AND s.sql_plan_baseline is not null
+ order by b.last_executed desc
+ 
+ ************** create database *************
+ 
+create database r17z001
+logfile group 1 ('+REDO','+REDO') size 1024M,
+            group 2 ('+REDO','+REDO') size 1024M,
+            group 3 ('+REDO','+REDO') size 1024M,
+            group 4 ('+REDO','+REDO') size 1024M,
+            group 5 ('+REDO','+REDO') size 1024M,
+            group 6 ('+REDO','+REDO') size 1024M
+character set WE8ISO8859P1
+national character set AL16UTF16
+datafile '+DATA' SIZE 2097152000 AUTOEXTEND ON NEXT 536870912 MAXSIZE 32767M extent management local
+sysaux datafile '+DATA' SIZE 2097152000 AUTOEXTEND ON NEXT 536870912 MAXSIZE 32767M
+undo tablespace undotbs1 datafile '+DATA' SIZE 10737418240
+default temporary tablespace temp tempfile '+DATA' SIZE 10737418240 autoextend on next 1G;
+
+create database prfl001
+logfile group 1 ('/o171-pl01-ld01-01/oradata/prfl001/redofiles/redo01a.log','/o171-pl01-ld01-01/oradata/prfl001/redofiles/redo01b.log') size 1024M,
+            group 2 ('/o171-pl01-ld01-01/oradata/prfl001/redofiles/redo02a.log','/o171-pl01-ld01-01/oradata/prfl001/redofiles/redo02b.log') size 1024M,
+            group 3 ('/o171-pl01-ld01-01/oradata/prfl001/redofiles/redo03a.log','/o171-pl01-ld01-01/oradata/prfl001/redofiles/redo03b.log') size 1024M,
+            group 4 ('/o171-pl01-ld01-01/oradata/prfl001/redofiles/redo04a.log','/o171-pl01-ld01-01/oradata/prfl001/redofiles/redo04b.log') size 1024M,
+            group 5 ('/o171-pl01-ld01-01/oradata/prfl001/redofiles/redo05a.log','/o171-pl01-ld01-01/oradata/prfl001/redofiles/redo05b.log') size 1024M,
+            group 6 ('/o171-pl01-ld01-01/oradata/prfl001/redofiles/redo06a.log','/o171-pl01-ld01-01/oradata/prfl001/redofiles/redo06b.log') size 1024M
+character set WE8ISO8859P1
+national character set AL16UTF16
+datafile '/o171-pl01-ld01-01/oradata/prfl001/datafiles/system01.dbf' SIZE 2097152000 AUTOEXTEND ON NEXT 536870912 MAXSIZE 32767M extent management local
+sysaux datafile '/o171-pl01-ld01-01/oradata/prfl001/datafiles/sysaux.dbf' SIZE 2097152000 AUTOEXTEND ON NEXT 536870912 MAXSIZE 32767M
+undo tablespace undotbs1 datafile '/o171-pl01-ld01-01/oradata/prfl001/datafiles/undotbs_01.dbf' SIZE 10737418240
+default temporary tablespace temp tempfile '/o171-pl01-ld01-01/oradata/prfl001/tempfiles/temp.dbf' SIZE 10737418240 autoextend on next 1G;
+
+@?/rdbms/admin/catalog.sql
+@?/rdbms/admin/catproc.sql
+ 
+############### create a Baseline on a statement in the shared pool #############
+ 
+accept sql_id -
+       prompt 'Enter value for sql_id: ' -
+       default 'X0X0X0X0'
+accept plan_hash_value -
+       prompt 'Enter value for plan_hash_value: ' -
+       default 'X0X0X0X0'
+accept fixed -
+       prompt 'Enter value for fixed (NO): ' -
+       default 'NO'
+accept enabled -
+       prompt 'Enter value for enabled (YES): ' -
+       default 'YES'
+accept plan_name -
+       prompt 'Enter value for plan_name (ID_sqlid_planhashvalue): ' -
+       default 'X0X0X0X0'
+
+
+set feedback off
+set sqlblanklines on
+set serveroutput on
+
+declare
+l_plan_name varchar2(40);
+l_old_plan_name varchar2(40);
+l_sql_handle varchar2(40);
+ret binary_integer;
+l_sql_id varchar2(13);
+l_plan_hash_value number;
+l_fixed varchar2(3);
+l_enabled varchar2(3);
+major_release varchar2(3);
+minor_release varchar2(3);
+begin
+ select regexp_replace(version,'\..*'), regexp_substr(version,'[0-9]+',1,2) into major_release, minor_release from v$instance;
+minor_release := 2;
+
+l_sql_id := '&&sql_id';
+l_plan_hash_value := to_number('&&plan_hash_value');
+l_fixed := '&&fixed';
+l_enabled := '&&enabled';
+
+ret := dbms_spm.load_plans_from_cursor_cache(
+    sql_id=>l_sql_id, 
+    plan_hash_value=>l_plan_hash_value,
+    fixed=>l_fixed,
+    enabled=>l_enabled);
+
+if minor_release = '1' then
+
+-- 11gR1 has a bug that prevents renaming Baselines
+
+    dbms_output.put_line(' ');
+    dbms_output.put_line('Baseline created.');
+    dbms_output.put_line(' ');
+
+else
+
+-- This statements looks for Baselines create in the last 4 seconds
+
+    select sql_handle, plan_name,
+    decode('&&plan_name','X0X0X0X0','SQLID_'||'&&sql_id'||'_'||'&&plan_hash_value','&&plan_name')
+    into l_sql_handle, l_old_plan_name, l_plan_name
+    from dba_sql_plan_baselines spb
+    where created > sysdate-(1/24/60/15);
+
+
+    ret := dbms_spm.alter_sql_plan_baseline(
+    sql_handle=>l_sql_handle,
+    plan_name=>l_old_plan_name,
+    attribute_name=>'PLAN_NAME',
+    attribute_value=>l_plan_name);
+
+    dbms_output.put_line(' ');
+    dbms_output.put_line('Baseline '||upper(l_plan_name)||' created.');
+    dbms_output.put_line(' ');
+
+end if;
+
+
+end;
+/
+
+undef sql_id
+undef plan_hash_value
+undef plan_name
+undef fixed
+set feedback on
+
+######### produces XPLAN output for a statement in the shared pool ####################
+
+set verify off
+set pages 9999
+set lines 150
+select * from table(dbms_xplan.display_cursor('&sql_id','&child_no',''))
+
+############ looks for cursors using cardinality feedback #################
+
+col sql_text for a80 word_wrap
+select a.sql_id, child_number child_no, b.sql_text from v$sql_shared_cursor a, v$sqlstats b
+where a.sql_id = b.sql_id
+and USE_FEEDBACK_STATS = 'Y'
+and a.sql_id like nvl('&sql_id',a.sql_id)
+and upper(sql_text) like upper(nvl('&sql_text',sql_text))
+and child_number > 0
+order by 1, 2
+
+################### shows SQL statements in the shared pool along with indication if Exadata Smart Scans were used ####
+
+set pagesize 999
+set lines 190
+col sql_text format a70 trunc
+col child format 99999
+col execs format 9,999
+col avg_etime format 99,999.99
+col "IO_SAVED_%" format 999.99
+col avg_px format 999
+col offload for a7
+
+select sql_id, child_number child, plan_hash_value plan_hash, executions execs, 
+(elapsed_time/1000000)/decode(nvl(executions,0),0,1,executions)/
+decode(px_servers_executions,0,1,px_servers_executions/decode(nvl(executions,0),0,1,executions)) avg_etime, 
+px_servers_executions/decode(nvl(executions,0),0,1,executions) avg_px,
+decode(IO_CELL_OFFLOAD_ELIGIBLE_BYTES,0,'No','Yes') Offload,
+decode(IO_CELL_OFFLOAD_ELIGIBLE_BYTES,0,0,100*(IO_CELL_OFFLOAD_ELIGIBLE_BYTES-IO_INTERCONNECT_BYTES)
+/decode(IO_CELL_OFFLOAD_ELIGIBLE_BYTES,0,1,IO_CELL_OFFLOAD_ELIGIBLE_BYTES)) "IO_SAVED_%",
+sql_text
+from v$sql s
+where upper(sql_text) like upper(nvl(q'[&sql_text]',sql_text))
+and sql_text not like 'BEGIN :sql_text := %'
+and sql_text not like '%IO_CELL_OFFLOAD_ELIGIBLE_BYTES%'
+and sql_text not like '/* SQL Analyze(%'
+and sql_id like nvl('&sql_id',sql_id)
+order by 1, 2, 3
+
+########## copy with exclude ##########
+
+rsync -av -e ssh --exclude='*.log' scripts oracle@inno-vgdb01-d01:/home/oracle/dba/scripts
+
+########## dos2unix #################
+
+dos2unix='tr -d "\015" <$1> temp; mv temp $1'
+cpus='echo "This machine has ";lscfg -l "proc*" 2>/dev/null | tail -n +3 | wc -l; echo "cpus"'
+alias dirsize='ls -l | awk '\''{sum+=$5} END {print sum}'\'''
+alias dirsizefull='ls -lR | awk '\''{sum+=$5} END {print sum}'\'''
+
+############# Blocking ###########################
+
+select     ses.sid, ses.serial#, 10 rec_num, 1 line_num, 
+       rpad('=',80,'=')
+     ||rpad('SID          : '||ses.sid,40)
+     ||rpad('Serial#      : '||ses.serial#,40)
+     ||rpad('Audit SID    : '||ses.audsid,40)
+     ||rpad('Status       : '||ses.status,40)
+     ||rpad('DB User      : '||ses.username,40)
+     ||rpad('OS User      : '||ses.osuser,40)
+     ||rpad('Module       : '||ses.module,40)
+     ||rpad('Action       : '||ses.action,40)
+     ||rpad('OS Server PID: '||prc.spid,40)
+     ||rpad('OS Client PID: '||ses.process,40)
+     ||rpad('Executions   : '||sqa.executions,40)
+     ||rpad('Rows Proc    : '||sqa.rows_processed,40)
+     ||rpad('Disk Reads   : '||sqa.disk_reads,40)
+     ||rpad('Buffer Gets  : '||sqa.buffer_gets,40)
+     ||rpad('LIOs/Row     : '||round(sqa.buffer_gets/decode(sqa.rows_processed,0,1,sqa.rows_processed),2),40)
+     ||rpad('LIOs/Exec    : '||round(sqa.buffer_gets/decode(sqa.executions,0,1,sqa.executions),2),40)
+     ||rpad('Host         : '||ses.machine,80)
+     ||rpad('Event        : '||wat.event,80)
+        ||rpad('SQL_ID       : '||ses.sql_id,80)
+     ||rpad('Statement    : ',80)    text
+from v$sqlarea  sqa
+,    v$process  prc
+,    v$session  ses
+,    v$session_wait  wat
+where sqa.address     = ses.sql_address
+and  sqa.hash_value  = ses.sql_hash_value
+and  prc.addr   = ses.paddr
+and  ses.type   != 'BACKGROUND'
+and  ses.status != 'INACTIVE'
+and  ses.username    is not null
+and  ses.audsid != userenv('SESSIONID')
+and  wat.sid(+) = ses.sid
+union
+select     ses.sid, ses.serial#, 20 rec_num, piece line_num
+,    sql_text             text
+from v$sqltext  txt
+,    v$session  ses
+where txt.address     = ses.sql_address
+and  txt.hash_value  = ses.sql_hash_value
+and  ses.type   != 'BACKGROUND'
+and  ses.status != 'INACTIVE'
+and  ses.username    is not null
+and  ses.audsid != userenv('SESSIONID')
+order by 1, 2, 3, 4
+
+*********** unzip and chmod **************
+
+for i in `find . -name "*.zip"`; do unzip -a $i -d `dirname $i`; done && find . -name "*.sh"| xargs chmod +x && find . -name "*.sh"| xargs dos2unix && find . -name eaglepatch.ini | xargs sed -i 's/SkipBackup=0/SkipBackup=1/g' 
+
+************************ ditl cycle complete ******************
+
+CREATE TABLE LOG_TBL
+  (THE_DATE DATE, THE_VALUE VARCHAR2(4000));
+  
+CREATE PROCEDURE LOG_IT(P_LOG_VALUE VARCHAR2)
+IS
+  PRAGMA AUTONOMOUS_TRANSACTION;
+BEGIN
+    INSERT
+    INTO LOG_TBL(THE_DATE, THE_VALUE)
+      VALUES (SYSDATE, P_LOG_VALUE);
+      
+    COMMIT;
+END;
+
+********** expdb ************************
+
+PARFILE=O171PL01.par full=Y directory=cgbackup dumpfile=exp_O171PL01_%U.dmp logfile=exp_O171PL01.log
+
+********** delete archivelogs **********
+
+RMAN>DELETE ARCHIVELOG ALL COMPLETED BEFORE ‘sysdate-1’;
+RMAN>DELETE ARCHIVELOG ALL BACKED UP 2 TIMES to disk;
+RMAN>DELETE NOPROMPT ARCHIVELOG UNTIL SEQUENCE = 3790;
+
+DROP RESTORE POINT gold_copy;
+sqlplus / as sysdba;
+shutdown immediate;
+startup mount;
+alter database flashback off;
+alter database noarchivelog;
+quit;
+rman target /
+crosscheck archivelog all;
+delete archivelog all;
+quit;
+sqlplus / as sysdba;
+alter database open;
+
+
+sqlplus / as sysdba;
+shutdown immediate;
+startup mount;
+alter database archivelog;
+alter database flashback on;
+quit;
+rman target /
+crosscheck archivelog all;
+delete archivelog all;
+quit;
+sqlplus / as sysdba;
+alter database open;
+
+
+*********** reorganize table ********
+
+2)Reorg this table
+ALTER TABLE ESTAR.ESTAR_CXL_INCOME_ACTVITY ENABLE ROW MOVEMENT;
+ALTER TABLE ESTAR.ESTAR_CXL_INCOME_ACTVITY SHRINK SPACE CASCADE;       
+ALTER TABLE ESTAR.ESTAR_CXL_INCOME_ACTVITY DEALLOCATE UNUSED;
+
+*************** Blocking statements *****************
+
+select s1.username || '@' || s1.machine ||
+  ' ( SID=' || s1.sid || ' )  is blocking '
+  || s2.username || '@' || s2.machine || ' ( SID=' || s2.sid || ' ) ' AS blocking_status
+  from v$lock l1 join v$lock l2 on (l1.id1 = l2.id1 and l2.id2 = l2.id2) 
+                 JOIN v$session s1 ON (s1.sid = l1.sid)
+                 JOIN v$session s2 ON (s2.sid = l2.sid)
+  WHERE l1.BLOCK=1 and l2.request > 0;
+  
+************* free recovery area **************
+
+select space_limit/1024/1024/1024 as Space_limit_GB, round(space_used/1024/1024/1024,2) as space_usedGB,
+(space_limit/1024/1024/1024 - round(space_used/1024/1024/1024,2)) as space_available_GB from v$recovery_file_dest
+  
+********** database size ***************
+
+select
+"Reserved_Space(MB)", "Reserved_Space(MB)" - "Free_Space(MB)" "Used_Space(MB)","Free_Space(MB)"
+from(
+select 
+(select sum(bytes/(1014*1024)) from dba_data_files) "Reserved_Space(MB)",
+(select sum(bytes/(1024*1024)) from dba_free_space) "Free_Space(MB)"
+from dual
+);
+
+SELECT sum(round(sum(bytes/(1024*1024*1024)))) as GB FROM dba_segments 
+group by TABLESPACE_NAME
+
+*************** replace number in a file **********
+
+999.757576756
+
+s/\.\([0-9]\{3\}\)\.\([0-9]\{9\}\)//g
+  
+*************** Redo logs ***************************
+
+Here’s a simple query for calculating recommended size of redo log files:
+Oracle PL/SQL
+	
+SELECT
+(SELECT ROUND(AVG(BYTES) / 1024 / 1024, 2) FROM V$LOG) AS "Redo size (MB)",
+ROUND((20 / AVERAGE_PERIOD) * (SELECT AVG(BYTES)
+FROM V$LOG) / 1024 / 1024, 2) AS "Recommended Size (MB)"
+FROM (SELECT AVG((NEXT_TIME - FIRST_TIME) * 24 * 60) AS AVERAGE_PERIOD
+FROM V$ARCHIVED_LOG
+WHERE FIRST_TIME > SYSDATE - 3
+AND TO_CHAR(FIRST_TIME, 'HH24:MI') BETWEEN
+&START_OF_PEAK_HOURS AND &END_OF_PEAK_HOURS);
+
+With Oracle 10g, we can also use “Redo Logfile Size Advisor”. This advisory utility allows you to specify your optimal mean time to recovery (MTTR) interval and calculates the optimal redo log size.  We can query V$INSTANCE_RECOVERY to see the optimal_logfile_size:
+Oracle PL/SQL
+ALTER SYSTEM SET FAST_START_MTTR_TARGET=100;
+
+SELECT OPTIMAL_LOGFILE_SIZE FROM V$INSTANCE_RECOVERY;
+
+OPTIMAL_LOGFILE_SIZE
+--------------------
+2285
+
+ALTER SYSTEM SET FAST_START_MTTR_TARGET=400;
+
+SELECT OPTIMAL_LOGFILE_SIZE FROM V$INSTANCE_RECOVERY;
+
+OPTIMAL_LOGFILE_SIZE
+--------------------
+11230
+	
+ALTER SYSTEM SET FAST_START_MTTR_TARGET=100;
+ 
+SELECT OPTIMAL_LOGFILE_SIZE FROM V$INSTANCE_RECOVERY;
+ 
+OPTIMAL_LOGFILE_SIZE
+--------------------
+2285
+ 
+ALTER SYSTEM SET FAST_START_MTTR_TARGET=400;
+ 
+SELECT OPTIMAL_LOGFILE_SIZE FROM V$INSTANCE_RECOVERY;
+ 
+OPTIMAL_LOGFILE_SIZE
+--------------------
+11230
+
+################ View business logs from EM ######################
+
+1. E:\Program Files\Eagle Investment Systems\eaglemgr\config\plugin_blogs.ini
+
+2.
+
+[BusinessLogs]
+; Root directory for business log files (full or relative to TPE); default: 'logs/business_logs'
+RootDirRel=logs/business_logs
+
+; Level of business logging (LogLevel = 0 - business logs disabled, otherwise - enabled). Default: 1
+Log_Level=0
+
+3 
+change to 1 
+ 
+*********************** What perl modules are installed ************************
+
+perldoc perllocal
+
+perl -MFile::Find=find -MFile::Spec::Functions -Tlw -e 'find { wanted => sub { print canonpath $_ if /\.pm\z/ },no_chdir => 1 }, @INC'
+
+*********************** AWR Report *********************************************
+
+SELECT output FROM 
+      TABLE
+      (dbms_workload_repository.awr_report_html(
+      (select dbid from v$database),
+      (select instance_number  from v$instance),
+      (select max(snap_id) - 1 from DBA_HIST_SNAPSHOT ),
+      (select max(snap_id)  from DBA_HIST_SNAPSHOT )));
+      
+************* Redo Log size ****************
+
+SELECT
+    a.GROUP#,
+    a.THREAD#,
+    a.SEQUENCE#,
+    a.ARCHIVED,
+    a.STATUS,
+    b.MEMBER    AS REDOLOG_FILE_NAME,
+    (a.BYTES/1024/1024) AS SIZE_MB
+FROM v$log a
+JOIN v$logfile b ON a.Group#=b.Group# 
+ORDER BY a.GROUP# ASC;
+
+*********************** Powershell *********************************************
+
+start -> powershell
+
+get-executionpolicy -list
+
+set-executionpolicy -scope localmachine -executionpolicy unrestricted
+
+##################### purge for files #############################
+
+#!/usr/bin/ksh
+
+Path1=/apps/psdwtst1/pace1/server/pacelog/DATAFILES1
+Path2=/apps/psdwtst1/pace1/server/pacelog/DATAFILES
+Path3=/apps/psdwtst1/pace1/server/pacelog/GHR_DROP/PWMGHR
+Path4=/apps/psdwtst1/pace1/server/pacelog/INSSDW/DT11
+
+set -A Paths $Path1 $Path2
+
+for i in ${Paths[@]}
+do
+        if [ -d $i ]; then
+                cd $i
+                echo From: $i
+                find . -type f -mtime +7 -exec ls -lthr  {} \;
+                find . -type f -mtime +7 -exec rm {} \;
+        else
+                echo $i "doesn't exist!!!"
+                exit 1;
+        fi
+done
+
+echo "FILES REMOVED SUCCESSFULLY!"
+
+set -A Paths1 $Path3 $Path4 
+for i in ${Paths1[@]}
+do
+        if [ -d $i ]; then
+                cd $i
+                echo From: $i
+                find . -type f -mtime +30 -exec ls -lthr  {} \;
+                find . -type f -mtime +30 -exec rm {} \;
+        else
+                echo $i "doesn't exist!!!"
+                exit 1;
+        fi
+done
+
+echo "FILES REMOVED SUCCESSFULLY!"
+exit 0;
+
+-------------------- sharepoint site ********************
+
+ https://bnymellon.sharepoint.com/Sites/DAPerformanceLab
+
+************* io Regression testing done ****************************
+
+rpm -ivh fio-2.1.4-1.el6.rf.x86_64.rpm
+
+chmod 777 -R /eagledb/oradata/iotest
+
+./fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --bs=8k --iodepth=24 --size=4G --readwrite=randread --numjobs=6 --runtime=300 --directory=/iotest
+
+fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=test --bs=8k --iodepth=8 --size=500M --readwrite=randread --numjobs=16 --runtime=180 --directory=/u01/app/oracle/iotest
+
+fio --name=fio_test --directory=/apps/eagle/data/msgcenter/iotest --size=500M --bs=8k --ioengine=libaio --iodepth=8 --rw=write --runtime=180  --numjobs=32
+
+sequential read
+fio --name=seqread --ioengine=libaio --iodepth=24 --rw=read --bs=8k --size=500M --numjobs=96 --runtime=180 --directory=/iotest
+
+#!/bin/bash
+
+date=`date +"%F-%H-%M-%S"`
+
+iodepth=$1
+size=$2
+blocksize=$3
+numjobs=$4
+rtime=$5
+dir=/iotest
+tname=$6
+
+rm -rf ${dir}/*
+
+fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=${tname} --bs=${blocksize} --iodepth=${iodepth} --size=${size} --readwrite=randread --numjobs=${numjobs} --runtime=${rtime} --directory=${dir} | grep read: > ${tname}_READ_iodepth${iodepth}_nj${numjobs}_rtime${rtime}_fs${size}_bs${blocksize}_${date}.log
+
+rm -rf ${dir}/*
+
+fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=${tname} --bs=${blocksize} --iodepth=${iodepth} --size=${size} --readwrite=randwrite --numjobs=${numjobs} --runtime=${rtime} --directory=${dir} | grep write: > ${tname}_WRITE_iodepth${iodepth}_nj${numjobs}_rtime${rtime}_fs${size}_bs${blocksize}_${date}.log
+
+rm -rf ${dir}/*
+
+*********** explain plan *************
+
+SQL> EXPLAIN PLAN FOR
+ 2   select prod_category, avg(amount_sold)
+ 3   from sales s, products p
+ 4   where p.prod_id = s.prod_id
+ 5   group by prod_category;
+
+Explained.
+
+SQL> select plan_table_output from table(dbms_xplan.display('plan_table',null,'basic'));
+
+------------------------------------------
+ Id   Operation              Name   
+------------------------------------------
+   0  SELECT STATEMENT              
+   1   HASH GROUP BY                
+   2    HASH JOIN                   
+   3     TABLE ACCESS FULL   PRODUCTS
+   4     PARTITION RANGE ALL        
+   5      TABLE ACCESS FULL  SALES  
+------------------------------------------
