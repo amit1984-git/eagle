@@ -1,0 +1,9 @@
+************** grant awr ***********
+grant advisor to pace_masterdbo;
+grant execute on dbms_workload_repository to pace_masterdbo;
+grant select any dictionary to pace_masterdbo;
+GRANT SELECT ON SYS.V_$DATABASE TO pace_masterdbo;
+GRANT SELECT ON SYS.V_$INSTANCE TO pace_masterdbo;
+GRANT EXECUTE ON SYS.DBMS_WORKLOAD_REPOSITORY TO pace_masterdbo;
+GRANT SELECT ON SYS.DBA_HIST_DATABASE_INSTANCE TO pace_masterdbo;
+GRANT SELECT ON SYS.DBA_HIST_SNAPSHOT TO pace_masterdbo;
